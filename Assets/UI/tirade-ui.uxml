@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 0; flex-direction: column;">
+        <ui:Label text="Lorem ipsum dolor sit ame" name="RegieLabel" style="white-space: normal; text-overflow: clip; -unity-font-style: italic;" />
+        <ui:VisualElement style="flex-direction: row;">
+            <ui:Label text="I.2" name="IDLabel" style="white-space: nowrap; text-overflow: ellipsis; width: 5%;" />
+            <ui:Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam convallis dictum accumsan. Curabitur vulputate, ex quis viverra convallis, nibh ipsum mollis nunc, pharetra fermentum ligula purus nec diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed eu dictum nibh. Sed interdum est leo, non egestas erat lacinia eget. " name="TiradeLabel" style="white-space: normal; text-overflow: clip; top: 0; flex-grow: 1; flex-shrink: 1;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

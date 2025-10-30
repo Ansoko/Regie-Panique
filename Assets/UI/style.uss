@@ -1,0 +1,48 @@
+:root {
+}
+
+#spotPad > .unity-button-group {
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.padButton {
+    background-color: rgb(255, 0, 0);
+}
+
+.padButton:hover {
+    background-color: rgb(0, 6, 255);
+}
+
+.padButton:selected {
+    background-color: rgb(0, 255, 0);
+}
+
+.padButton:active {
+    background-color: rgb(255, 117, 0);
+}
+
+.buttonColorWhite {
+}
+
+.buttonColorBlue {
+}
+
+.buttonColorYellow {
+}
+
+.buttonColorPurple {
+}
+
+.buttonColorRed {
+}
+
+.buttonColorGreen {
+}
+
+.buttonColorBrown {
+}
+
+.buttonColorOrange {
+}
