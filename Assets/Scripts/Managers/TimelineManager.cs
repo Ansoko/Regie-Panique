@@ -17,6 +17,7 @@ public class TimelineManager : MonoBehaviour
     private VisualElement currentplayingElement;
     private int currentPlayingKey = 0;
     private float elipsedTime = 0f;
+    private float widthPerSecond = 200f;
 
     private Dictionary<VisualElement, SnapshotDisc> timelineCases = new();
     private SnapshotDisc currentPlayingDisc = null;
@@ -55,8 +56,8 @@ public class TimelineManager : MonoBehaviour
     {
         VisualElement root = UIManager.instance.rootElement.Q("timeline");
         timelineHolder = root.Q<ScrollView>("timelineScroll");
-        timelineHolder.contentContainer.style.width = 150 * totalDuration;
-        widthTimeline = 150 * totalDuration;
+        timelineHolder.contentContainer.style.width = widthPerSecond * totalDuration;
+        widthTimeline = widthPerSecond * totalDuration;
         for (int i = 0; i < durationTimestamp.Count; i++)
         {
             VisualElement timelineInstance = timelineTemplate.Instantiate();
@@ -64,7 +65,7 @@ public class TimelineManager : MonoBehaviour
             Label tiradeTimelineLabel = timelineInstance.Q<Label>("tirade-timeline");
             Label timecodeLabel = timelineInstance.Q<Label>("timecode");
 
-            rootElement.style.width = durationTimestamp[i] * 150;
+            rootElement.style.width = durationTimestamp[i] * widthPerSecond;
             rootElement.RegisterCallback<MouseEnterEvent>(HoverCase);
             rootElement.RegisterCallback<MouseLeaveEvent>(UnhoverCase);
 
