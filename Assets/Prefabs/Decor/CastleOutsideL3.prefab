@@ -17,16 +17,12 @@ PrefabInstance:
       value: CastleOutsideL3
       objectReference: {fileID: 0}
     - target: {fileID: 6625477970914303220, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6625477970914303220, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 6625477970914303220, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 6625477970914303220, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_LocalRotation.w

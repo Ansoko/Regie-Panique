@@ -196,19 +196,19 @@ public class DecorsManager : MonoBehaviour
         {
             Destroy(currentDecorL1);
             int indexL1 = nameDecorsL1.IndexOf(currentDisc.data.decorsL1);
-            Instantiate(GameObjectDecorsL1[indexL1], decorParent);
+            currentDecorL1 = Instantiate(GameObjectDecorsL1[indexL1], decorParent);
         }
         if (currentDisc.data.decorsL2 != null)
         {
             Destroy(currentDecorL2);
             int indexL2 = nameDecorsL2.IndexOf(currentDisc.data.decorsL2);
-            Instantiate(GameObjectDecorsL2[indexL2], decorParent);
+            currentDecorL2 = Instantiate(GameObjectDecorsL2[indexL2], decorParent);
         }
         if (currentDisc.data.decorsL3 != null)
         {
             Destroy(currentDecorL3);
             int indexL3 = nameDecorsL3.IndexOf(currentDisc.data.decorsL3);
-            Instantiate(GameObjectDecorsL3[indexL3], decorParent);
+            currentDecorL3 = Instantiate(GameObjectDecorsL3[indexL3], decorParent);
         }
 
         if (currentDisc.data.curtainOpening == 1)

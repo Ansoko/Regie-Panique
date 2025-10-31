@@ -44,7 +44,7 @@ public class SnapshotDisc : MonoBehaviour
     }
 
     public float time = 1;
-    [SerializeField] private MeshRenderer diskRenderer;
+    [SerializeField] private SpriteRenderer diskRenderer;
     public DiscData data;
 
     private void Start()
@@ -72,7 +72,7 @@ public class SnapshotDisc : MonoBehaviour
     private void RandomColor()
     {
         if(diskRenderer == null) return;
-        diskRenderer.material.color = Random.ColorHSV(0, 1, .9f, 1, .6f, 1);
+        diskRenderer.color = Random.ColorHSV(0, 1, .9f, 1, .6f, 1);
     }
 
     public void AddDataToDisk(DiscData newData)

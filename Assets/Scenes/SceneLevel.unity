@@ -170,7 +170,7 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
@@ -519,10 +519,22 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2d2ba1bbe5c342941a96916a60eb49b9, type: 3}
   - {fileID: 8300000, guid: 6bd2c79becda77a41931ecdf6429235d, type: 3}
   - {fileID: 8300000, guid: b78e2d81efe57a9458a5b4b8c7f0ddbb, type: 3}
+  - {fileID: 8300000, guid: fadcd7b36b5924c4b930283f8fcec2b3, type: 3}
+  - {fileID: 8300000, guid: f346f4a71884d424087f6b4e832fe1f4, type: 3}
+  - {fileID: 8300000, guid: 61f869dca97fa7d46983dcbce8f9af73, type: 3}
+  - {fileID: 8300000, guid: 218160ff6207ba041831a80ce11b3c31, type: 3}
+  - {fileID: 8300000, guid: 1f0e8d1de0d4d5d48b73d0f068351231, type: 3}
+  - {fileID: 8300000, guid: 1f0e8d1de0d4d5d48b73d0f068351231, type: 3}
   audioNames:
   - applause
   - rideaux
   - Bruit de pas (Dev)
+  - Bad
+  - Good
+  - Great
+  - TakeDisk
+  - PlaceDisk
+  - PlaceTimeline
 --- !u!82 &1385634169
 AudioSource:
   m_ObjectHideFlags: 0
@@ -534,9 +546,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7594464994969194245, guid: 2c55712002462ff4880971280559aa40, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: c46f4cd3bdb5f1f4ea133ce934d5d0d1, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -777,7 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13bf08347cc901a4884117776a3d7a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelineManager
-  speed: 0.2
+  speed: 0.1
   timeBetweenScene: 10
   durationTimestamp:
   - 1
@@ -804,19 +816,19 @@ MonoBehaviour:
   - Table avec des andouilles.
   - Eau.
   listDecorsL1:
-  - {fileID: 21300000, guid: 8dcad93f02c8e804aa62c08c7b456cf5, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: b0527814e2c3c064abdd07cd6ce35a63, type: 3}
+  - {fileID: 21300000, guid: 46de0fe690d0e8441b21859668e7418c, type: 3}
+  - {fileID: 21300000, guid: cdaca429109bb1d489b921333a45d36e, type: 3}
+  - {fileID: 21300000, guid: 3a29cee983e1fa146bf65c2c22be962b, type: 3}
+  - {fileID: 21300000, guid: 4e3281999c6fa8c4785ff79675ba663b, type: 3}
+  - {fileID: 21300000, guid: 0c66f6d93550925439bc8ba87a886a76, type: 3}
   GameObjectDecorsL1:
   - {fileID: 0}
-  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
-  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
-  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
-  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
-  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
+  - {fileID: 5167840461149646450, guid: 8a257bb147c1c30459e868c65fc1fb79, type: 3}
+  - {fileID: 358179368955293930, guid: e1cd563d47ed97342bc0b6a17ed8140c, type: 3}
+  - {fileID: 8029663328409286593, guid: 792175f4894ffae4ab281a31dbdb615d, type: 3}
+  - {fileID: 2797254600131863057, guid: 7a36858a243fb904a85e55363b3d09b3, type: 3}
+  - {fileID: 1502172371427638678, guid: fc764b0bee0bb264b8f4261f4a9a9af7, type: 3}
   nameDecorsL2:
   - Aucun changement.
   - "Tr\xF4ne."
@@ -824,17 +836,17 @@ MonoBehaviour:
   - "Armes en face des fen\xEAtres."
   - Bateau.
   listDecorsL2:
-  - {fileID: 21300000, guid: 8dcad93f02c8e804aa62c08c7b456cf5, type: 3}
-  - {fileID: 21300000, guid: 8007279669abcfe4ca6abc29fc61ea48, type: 3}
-  - {fileID: 21300000, guid: 8007279669abcfe4ca6abc29fc61ea48, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
-  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: b0527814e2c3c064abdd07cd6ce35a63, type: 3}
+  - {fileID: 21300000, guid: bd34fc7447302a840a251addc931147f, type: 3}
+  - {fileID: 21300000, guid: 4e3281999c6fa8c4785ff79675ba663b, type: 3}
+  - {fileID: 21300000, guid: c036b97cc361fb848a912037efca5a23, type: 3}
+  - {fileID: 21300000, guid: 5e70da50a84914c4181d35bb2ab327cb, type: 3}
   GameObjectDecorsL2:
   - {fileID: 0}
-  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
-  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
-  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
-  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
+  - {fileID: 5103893354414637763, guid: e805db8053fcf3543a9500b1221a496c, type: 3}
+  - {fileID: 1511720759304083867, guid: d896ce1be98365743b2b737cc6ee019b, type: 3}
+  - {fileID: 6044512725660829055, guid: a251d9b8ac4770e41b2ec03078f5f239, type: 3}
+  - {fileID: 962457573422580569, guid: 4d03a41813da4b3488079c3e90c31177, type: 3}
   nameDecorsL3:
   - Aucun changement.
   - "Maison de M\xE8re et P\xE8re Ubu."
@@ -842,14 +854,14 @@ MonoBehaviour:
   - "Dans une tour du ch\xE2teau royal."
   - "En bas du ch\xE2teau \xE0 c\xF4t\xE9 de la mer"
   listDecorsL3:
-  - {fileID: 21300000, guid: 8dcad93f02c8e804aa62c08c7b456cf5, type: 3}
-  - {fileID: 21300000, guid: 8007279669abcfe4ca6abc29fc61ea48, type: 3}
+  - {fileID: 21300000, guid: b0527814e2c3c064abdd07cd6ce35a63, type: 3}
+  - {fileID: 21300000, guid: ffac7e66e2502d4468f9d613006f57f0, type: 3}
   - {fileID: 21300000, guid: c30f3b42d8265ab45ab79f97d629fc6c, type: 3}
   - {fileID: 21300000, guid: 17e0a3c660325784a8071db92cb4cdd3, type: 3}
   - {fileID: 21300000, guid: efafff4563a2c1749af08fb6be09c46d, type: 3}
   GameObjectDecorsL3:
   - {fileID: 0}
-  - {fileID: 7690927651002564927, guid: 13bcf2d9fa6bf5c49903b84eef3f09ff, type: 3}
+  - {fileID: 1580923844617628301, guid: 0287ec0707352a64e8c796bfad3a51c9, type: 3}
   - {fileID: 7690927651002564927, guid: 6ecb15c1b44a4e6479324178084669ab, type: 3}
   - {fileID: 7690927651002564927, guid: 13bcf2d9fa6bf5c49903b84eef3f09ff, type: 3}
   - {fileID: 9192096737728918145, guid: 82fb933673a8fea4290a85d52f4f47b8, type: 3}
@@ -878,9 +890,93 @@ MonoBehaviour:
   nameSounds:
   - Trois Coups (Brigadier)
   - Coup de revolver
+  - "Sc\xE8ne de bataille"
   listSounds:
   - {fileID: 8300000, guid: d189f3a101836b047b4ceeb38e51da1c, type: 3}
-  - {fileID: 8300000, guid: 6bd2c79becda77a41931ecdf6429235d, type: 3}
+  - {fileID: 8300000, guid: d2b41842c954c2341b713990d4128201, type: 3}
+  - {fileID: 8300000, guid: 5ce88ee65230f3445b8ce9cb51723ff9, type: 3}
+--- !u!1001 &1644349618
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 30206101}
+    m_Modifications:
+    - target: {fileID: 100000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_Name
+      value: FX_Smoke
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: prewarm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: lengthInSec
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: ab1112643ee572748b01dede71158272, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab1112643ee572748b01dede71158272, type: 3}
+--- !u!4 &1644349619 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: ab1112643ee572748b01dede71158272, type: 3}
+  m_PrefabInstance: {fileID: 1644349618}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3105033595990766591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -893,6 +989,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 4416926829866175479, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 9135295130456634281, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -903,7 +1003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9135295130456634281, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 35
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 9135295130456634281, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
       propertyPath: m_LocalRotation.w
@@ -935,7 +1035,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 9135295130456634281, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1644349619}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4416926829866175479, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
       insertIndex: -1

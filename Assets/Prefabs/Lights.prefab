@@ -73,6 +73,12 @@ MonoBehaviour:
   - {r: 1, g: 0.0047169924, b: 0.0047169924, a: 1}
   - {r: 0.5769229, g: 0, b: 1, a: 1}
   maxAmbianceIntensity: 15000
+  noIntensity: {fileID: -202238879, guid: 1d142e38f7c00f343959d4dc9275ab42, type: 3}
+  Int0: {fileID: -1014731743, guid: 1d142e38f7c00f343959d4dc9275ab42, type: 3}
+  Int25: {fileID: 216899144, guid: 1d142e38f7c00f343959d4dc9275ab42, type: 3}
+  Int50: {fileID: 1437076302, guid: 1d142e38f7c00f343959d4dc9275ab42, type: 3}
+  Int75: {fileID: 550306025, guid: 1d142e38f7c00f343959d4dc9275ab42, type: 3}
+  Int100: {fileID: -1323617371, guid: 1d142e38f7c00f343959d4dc9275ab42, type: 3}
 --- !u!1 &4817623645341078929
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,13 +129,13 @@ Light:
   m_InnerSpotAngle: 113.3356
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 3.3
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -156,10 +162,10 @@ Light:
     serializedVersion: 2
     m_Bits: 55
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 33.42, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -184,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
   m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
+  m_AdditionalLightsShadowResolutionTier: 1
   m_CustomShadowLayers: 0
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}

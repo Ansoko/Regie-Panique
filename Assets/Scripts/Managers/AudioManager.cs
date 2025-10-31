@@ -38,11 +38,12 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(AudioClip audioClip, int importance = 0)
     {
-        if (sfxAudioSource.isPlaying)
-            sfxAudioSource.Stop();
-        if(importance >= currentImportance)
-            sfxAudioSource.PlayOneShot(audioClip);
-        currentImportance = importance;
+        sfxAudioSource.PlayOneShot(audioClip);
+        //if (sfxAudioSource.isPlaying)
+        //    sfxAudioSource.Stop();
+        //if(importance >= currentImportance)
+        //    sfxAudioSource.PlayOneShot(audioClip);
+        //currentImportance = importance;
     }
 
     public void StopSFX(string byName="")
