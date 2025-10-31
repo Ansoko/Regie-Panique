@@ -32,7 +32,7 @@ public class SoundIngameManager : MonoBehaviour
         labelSound.text = nameSounds[currentIndex];
     }
 
-    private void Reset()
+    private void ResetButtons()
     {
         currentIndex = 0;
         labelSound.text = nameSounds[currentIndex];
@@ -57,7 +57,7 @@ public class SoundIngameManager : MonoBehaviour
         SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
         data.soundType = nameSounds[currentIndex];
 
-        Reset();
+        ResetButtons();
 
         currentDisc.AddDataToDisk(data);
     }

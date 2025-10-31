@@ -140,15 +140,20 @@ public class DisksManager : MonoBehaviour
         pressed = false;
     }
 
-    public void ShowDisk(SnapshotDisc disc)
+    public void ShowDisk(SnapshotDisc disc, bool select=true)
     {
         disc.gameObject.SetActive(true);
-        var col = disc.GetComponent<Collider>();
-        SelectDisk(disc.gameObject, col);
+        if (select)
+        {
+            var col = disc.GetComponent<Collider>();
+            SelectDisk(disc.gameObject, col);
+        }
     }
 
     private void HideDisk(GameObject disc)
     {
+        var col = disc.GetComponent<Collider>();
+        col.enabled = true;
         disc.SetActive(false);
     }
 

@@ -6,7 +6,6 @@ using static UnityEditor.Progress;
 
 public class TextContent : MonoBehaviour
 {
-
     public struct Dialogue
     {
         public string acte;
@@ -15,6 +14,7 @@ public class TextContent : MonoBehaviour
         public int key;
         public string character;
         public string dialogue;
+        public string noteDirector;
         public int newPosition;
         public string decorL3;
         public string decorL2;
@@ -29,7 +29,7 @@ public class TextContent : MonoBehaviour
         public string sons;
         public string rideau;
 
-        public Dialogue(string acte, string scene, string titre, int key, string character, string dialogue, int newPosition, string decorL3, string decorL2, string decorL1, int intensiteAmb, string couleurAmb, string onOffSpot, string couleurSpot, string diametreSpot, int placementGrille9, string mouvement, string sons, string rideau)
+        public Dialogue(string acte, string scene, string titre, int key, string character, string dialogue, string noteDirector, int newPosition, string decorL3, string decorL2, string decorL1, int intensiteAmb, string couleurAmb, string onOffSpot, string couleurSpot, string diametreSpot, int placementGrille9, string mouvement, string sons, string rideau)
         {
             this.acte = acte;
             this.scene = scene;
@@ -37,6 +37,7 @@ public class TextContent : MonoBehaviour
             this.key = key;
             this.character = character;
             this.dialogue = dialogue;
+            this.noteDirector = noteDirector;
             this.newPosition = newPosition;
             this.decorL3 = decorL3;
             this.decorL2 = decorL2;
@@ -78,25 +79,27 @@ public class TextContent : MonoBehaviour
             line = line.Replace(";;", ";null;");
             line = line.Replace(";;", ";null;");
             string[] values = line.Split(';');
+            //Debug.Log(values[3]+"//"+ values[7] + "//" + values[11] + "//" + values[16] + "//");
             timestamps.Add(new Dialogue(values[0],
                                         values[1],
                                         values[2],
-                                        Int32.Parse(values[3] != "null" ? values[3] : "-1"),
+                                        values[3] != "null" ? Int32.Parse(values[3]) : -1,
                                         values[4],
                                         values[5],
-                                        Int32.Parse(values[6] != "null" ? values[6] : "0"),
-                                        values[7],
-                                        values[8],
+                                        values[6],
+                                        values[7] != "null" ? Int32.Parse(values[7]) : 0,
+                                        values[10],
                                         values[9],
-                                        Int32.Parse(values[10] != "null" ? values[10] : "-1"),
-                                        values[11],
+                                        values[8],
+                                        values[11] != "null" ? Int32.Parse(values[11]) : -1,
                                         values[12],
                                         values[13],
                                         values[14],
-                                        -1,//Int32.Parse(values[15] != "null" ? values[15] : "-1"),
-                                        values[16],
+                                        values[15],
+                                        values[16] != "null" ? Int32.Parse(values[16]) : -1,
                                         values[17],
-                                        values[18]));
+                                        values[18],
+                                        values[19]));
         }
     }
 

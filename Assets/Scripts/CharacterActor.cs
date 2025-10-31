@@ -27,6 +27,7 @@ public class CharacterActor : MonoBehaviour
 
     private IEnumerator MoveOverTime(Vector3 targetPosition, float duration)
     {
+        AudioManager.Instance.PlaySoundByName("Bruit de pas (Dev)");
         Vector3 startPosition = transform.position;
         float elapsed = 0f;
         while (elapsed < duration)
@@ -35,6 +36,7 @@ public class CharacterActor : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
+        AudioManager.Instance.StopSFX("Bruit de pas (Dev)");
         transform.position = targetPosition;
     }
 }

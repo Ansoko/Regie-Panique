@@ -124,6 +124,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9135295130456634281, guid: 219ef32bddcc3374ba58d469d48b74ce, type: 3}
   m_PrefabInstance: {fileID: 3105033595990766591}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &62565468 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3363259617829802189, guid: c72a31b3ee350f544bb013e4403b789a, type: 3}
+  m_PrefabInstance: {fileID: 8799049252952732079}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &219842234 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9135955024863229732, guid: c72a31b3ee350f544bb013e4403b789a, type: 3}
@@ -510,8 +515,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicSource: {fileID: 1385634169}
   sfxAudioSource: {fileID: 1385634170}
-  listAudio: []
-  audioNames: []
+  listAudio:
+  - {fileID: 8300000, guid: 2d2ba1bbe5c342941a96916a60eb49b9, type: 3}
+  - {fileID: 8300000, guid: 6bd2c79becda77a41931ecdf6429235d, type: 3}
+  - {fileID: 8300000, guid: b78e2d81efe57a9458a5b4b8c7f0ddbb, type: 3}
+  audioNames:
+  - applause
+  - rideaux
+  - Bruit de pas (Dev)
 --- !u!82 &1385634169
 AudioSource:
   m_ObjectHideFlags: 0
@@ -766,7 +777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13bf08347cc901a4884117776a3d7a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelineManager
-  speed: 1
+  speed: 0.5
   durationTimestamp:
   - 1
   - 2
@@ -784,6 +795,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d8d657bea5ad84f920aef12132efd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DecorsManager
+  nameDecorsL1:
+  - Aucun changement.
+  - Une chandelle verte.
+  - "Coffre avec tr\xE9sor."
+  - Tapis rouge.
+  - Table avec des andouilles.
+  - Eau.
+  listDecorsL1:
+  - {fileID: 21300000, guid: 8dcad93f02c8e804aa62c08c7b456cf5, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  GameObjectDecorsL1:
+  - {fileID: 0}
+  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
+  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
+  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
+  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
+  - {fileID: 796720919625789289, guid: c2f94c50e05ce7145985869b3fe7f9e5, type: 3}
+  nameDecorsL2:
+  - Aucun changement.
+  - "Tr\xF4ne."
+  - Table avec des andouilles.
+  - "Armes en face des fen\xEAtres."
+  - Bateau.
+  listDecorsL2:
+  - {fileID: 21300000, guid: 8dcad93f02c8e804aa62c08c7b456cf5, type: 3}
+  - {fileID: 21300000, guid: 8007279669abcfe4ca6abc29fc61ea48, type: 3}
+  - {fileID: 21300000, guid: 8007279669abcfe4ca6abc29fc61ea48, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  - {fileID: 21300000, guid: f87cccf2b66779141b3a89a4f146dbdc, type: 3}
+  GameObjectDecorsL2:
+  - {fileID: 0}
+  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
+  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
+  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
+  - {fileID: 1309613769678163766, guid: c2bc853c0c03b224c8a3197802bf5c14, type: 3}
+  nameDecorsL3:
+  - Aucun changement.
+  - "Maison de M\xE8re et P\xE8re Ubu."
+  - "Salon du ch\xE2teau royal."
+  - "Dans une tour du ch\xE2teau royal."
+  - "En bas du ch\xE2teau \xE0 c\xF4t\xE9 de la mer"
+  listDecorsL3:
+  - {fileID: 21300000, guid: 8dcad93f02c8e804aa62c08c7b456cf5, type: 3}
+  - {fileID: 21300000, guid: 8007279669abcfe4ca6abc29fc61ea48, type: 3}
+  - {fileID: 21300000, guid: c30f3b42d8265ab45ab79f97d629fc6c, type: 3}
+  - {fileID: 21300000, guid: 17e0a3c660325784a8071db92cb4cdd3, type: 3}
+  - {fileID: 21300000, guid: 56daf0fef685d4949b9554ffd3443648, type: 3}
+  GameObjectDecorsL3:
+  - {fileID: 0}
+  - {fileID: 7690927651002564927, guid: 13bcf2d9fa6bf5c49903b84eef3f09ff, type: 3}
+  - {fileID: 7690927651002564927, guid: 6ecb15c1b44a4e6479324178084669ab, type: 3}
+  - {fileID: 7690927651002564927, guid: 13bcf2d9fa6bf5c49903b84eef3f09ff, type: 3}
+  - {fileID: 7690927651002564927, guid: 13bcf2d9fa6bf5c49903b84eef3f09ff, type: 3}
+  decorParent: {fileID: 62565468}
   leftCurtain: {fileID: 375753748}
   rightCurtain: {fileID: 219842234}
   curtainLeftSide: {fileID: 767775587}

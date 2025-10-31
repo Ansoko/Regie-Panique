@@ -56,11 +56,8 @@ public class UIScript : MonoBehaviour
 
             TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(pageNumber * tiradesByPage + i + 1);
             tiradeInstance.Q<Label>("IDLabel").text = dialogue.key.ToString();
-            tiradeInstance.Q<Label>("RegieLabel").text = "";
+            tiradeInstance.Q<Label>("RegieLabel").text = dialogue.noteDirector != "null" ? dialogue.noteDirector : "";
             tiradeInstance.Q<Label>("TiradeLabel").text = $"{dialogue.character} – {dialogue.dialogue}";
-            //tiradeInstance.Q<Label>("IDLabel").text = TextContent.instance.GetDialogueById($"ref_{pageNumber * tiradesByPage + i + 1}");
-            //tiradeInstance.Q<Label>("RegieLabel").text = TextContent.instance.GetDialogueById($"director_{pageNumber * tiradesByPage + i + 1}");
-            //tiradeInstance.Q<Label>("TiradeLabel").text = TextContent.instance.GetDialogueById($"tirade_{pageNumber * tiradesByPage + i + 1}");
 
             tiradeHolder.Add(tiradeInstance);
         }

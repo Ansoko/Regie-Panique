@@ -15,6 +15,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="platine" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap;">
             <ui:VisualElement name="lights" style="flex-grow: 0; width: 50%;">
+                <ui:Toggle name="spotOnOff" enabled="true" value="true" />
                 <ui:ToggleButtonGroup is-multiple-selection="false" value="0" allow-empty-selection="true" name="spotPad" style="width: 16.5%;">
                     <ui:Button class="padButton" />
                     <ui:Button class="padButton" />
@@ -33,7 +34,7 @@
                     <ui:Button text="-&gt;&gt;" name="spot4" />
                 </ui:ToggleButtonGroup>
                 <ui:SliderInt value="42" high-value="1" name="spotDimension" style="width: 50px;" />
-                <ui:ToggleButtonGroup name="spotCouleur" value="000000" allow-empty-selection="true" is-multiple-selection="false">
+                <ui:ToggleButtonGroup name="spotCouleur" value="000000" allow-empty-selection="true" is-multiple-selection="false" enabled="true">
                     <ui:Button text="Blanc" name="spot1" />
                     <ui:Button text="Rouge" name="spot2" />
                     <ui:Button text="Bleu" name="spot3" />
@@ -52,41 +53,21 @@
                 </ui:ToggleButtonGroup>
             </ui:VisualElement>
             <ui:VisualElement name="decors" style="flex-grow: 0; width: 50%;">
-                <ui:ToggleButtonGroup is-multiple-selection="false" value="0" allow-empty-selection="true" name="spotPad" style="width: 16.5%;">
-                    <ui:Button class="padButton" />
-                    <ui:Button class="padButton" />
-                    <ui:Button class="padButton" />
-                    <ui:Button class="padButton" />
-                    <ui:Button />
-                    <ui:Button />
-                    <ui:Button />
-                    <ui:Button />
-                    <ui:Button style="border-right-width: 0; margin-right: 0;" />
-                </ui:ToggleButtonGroup>
-                <ui:ToggleButtonGroup name="spotDirection" value="000000" allow-empty-selection="true" is-multiple-selection="false">
-                    <ui:Button text="&lt;&lt;-" />
-                    <ui:Button text="&lt;" />
-                    <ui:Button text="&gt;" />
-                    <ui:Button text="-&gt;&gt;" name="spot4" />
-                </ui:ToggleButtonGroup>
-                <ui:SliderInt value="42" high-value="1" name="spotDimension" style="width: 50px;" />
-                <ui:ToggleButtonGroup name="spotCouleur" value="000000" allow-empty-selection="true" is-multiple-selection="false">
-                    <ui:Button text="Blanc" name="spot1" />
-                    <ui:Button text="Rouge" name="spot2" />
-                    <ui:Button text="Bleu" name="spot3" />
-                    <ui:Button text="Vert" name="spot4" />
-                    <ui:Button text="Violet" name="spot5" />
-                    <ui:Button text="Jaune" name="spot6" />
-                </ui:ToggleButtonGroup>
-                <ui:SliderInt value="10" high-value="10" name="ambiantIntensity" direction="Vertical" show-input-field="false" fill="true" style="height: 110px;" />
-                <ui:ToggleButtonGroup name="ambiantCouleur" value="000000" allow-empty-selection="true" is-multiple-selection="false">
-                    <ui:Button text="Blanc" name="spot1" />
-                    <ui:Button text="Rouge" name="spot2" />
-                    <ui:Button text="Bleu" name="spot3" />
-                    <ui:Button text="Vert" name="spot4" />
-                    <ui:Button text="Violet" name="spot5" />
-                    <ui:Button text="Jaune" name="spot6" />
-                </ui:ToggleButtonGroup>
+                <ui:VisualElement style="flex-grow: 0; width: 50%; flex-direction: row;">
+                    <ui:Button name="previousDecorsL1" />
+                    <ui:VisualElement name="imgDecorsL1" style="align-self: center; justify-content: center; align-items: stretch; height: 100%; width: 200px; background-image: url(&quot;project://database/Assets/Sprites/planks_tile.png?fileID=2800000&amp;guid=8007279669abcfe4ca6abc29fc61ea48&amp;type=3#planks_tile&quot;); -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:Button name="nextDecorsL1" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 0; width: 50%; flex-direction: row;">
+                    <ui:Button name="previousDecorsL2" />
+                    <ui:VisualElement name="imgDecorsL2" style="align-self: center; justify-content: center; align-items: stretch; height: 100%; width: 200px; background-image: url(&quot;project://database/Assets/Sprites/planks_tile.png?fileID=2800000&amp;guid=8007279669abcfe4ca6abc29fc61ea48&amp;type=3#planks_tile&quot;); -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:Button name="nextDecorsL2" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 0; width: 50%; flex-direction: row;">
+                    <ui:Button name="previousDecorsL3" />
+                    <ui:VisualElement name="imgDecorsL3" style="align-self: center; justify-content: center; align-items: stretch; height: 100%; width: 200px; background-image: url(&quot;project://database/Assets/Sprites/planks_tile.png?fileID=2800000&amp;guid=8007279669abcfe4ca6abc29fc61ea48&amp;type=3#planks_tile&quot;); -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:Button name="nextDecorsL3" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="sound" style="flex-grow: 0; width: 50%; flex-direction: row;">
                 <ui:Button text="Button" name="previousSound" />

@@ -60,7 +60,7 @@ public class ActorManager : MonoBehaviour
 
             if (dialogue.key < 1)
                 continue;
-            yield return new WaitForSeconds(duration*TimelineManager.instance.speed);
+            yield return new WaitForSeconds(duration / TimelineManager.instance.speed);
         }
     }
 

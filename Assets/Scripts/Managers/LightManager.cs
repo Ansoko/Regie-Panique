@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class LightManager : MonoBehaviour
 
     int currentSpotPosition = 4;
 
+    private Toggle spotOnOff;
     private ToggleButtonGroup spotPositions;
     private ToggleButtonGroup spotDirection;
     private ToggleButtonGroup spotColor;
@@ -57,12 +59,12 @@ public class LightManager : MonoBehaviour
         if (coord.x < 0) //déborde à gauche
         {
             currentSpotPosition = CoordToIndex(Vector2Int.up * coord.y);
-            targetPosition = positions[currentSpotPosition].position + Vector3.right * 30;
+            targetPosition = positions[currentSpotPosition].position + Vector3.left * Mathf.Abs(coord.x) * 30;
         }
         else if(coord.x > 2) //déborde à droite
         {
             currentSpotPosition = CoordToIndex(Vector2Int.right*2 + Vector2Int.up*coord.y);
-            targetPosition = positions[currentSpotPosition].position + Vector3.left * 30;
+            targetPosition = positions[currentSpotPosition].position + Vector3.right * Mathf.Abs(coord.x-2) * 30;
         }
         else
         {
@@ -141,9 +143,20 @@ public class LightManager : MonoBehaviour
         return maxAmbianceIntensity / 10 * intensity;
     }
 
+    private string GetActivationSpot(bool value)
+    {
+        return value ? "Allumé" : "Éteint";
+    }
+
     private void PlayDisc(SnapshotDisc currentDisc)
     {
         SnapshotDisc.DiscData currentDiscData = currentDisc.data;
+
+        if (currentDiscData.hasSpot == "Éteint")
+            spot.enabled = false;
+        else if (currentDiscData.hasSpot == "Allumé")
+            spot.enabled = true;
+
         if (currentDiscData.spotColor != -1)
             spot.color = spotColors[currentDiscData.spotColor];
         if (currentDiscData.spotSize != -1)
@@ -178,10 +191,14 @@ public class LightManager : MonoBehaviour
     private void RetreaveParameters(SnapshotDisc currentDisc)
     {
         SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
-        data.spotPlacement = GetPositionSpot(spotPositions.value);
-        data.spotMouvement = GetDirectionSpot(spotDirection.value);
-        data.spotColor = GetColorSpot(spotColor.value);
-        data.spotSize = GetDimensionSpot(spotDimension.value == 1);
+        data.hasSpot = GetActivationSpot(spotOnOff.value);
+        if(data.hasSpot == "Allumé")
+        {
+            data.spotPlacement = GetPositionSpot(spotPositions.value);
+            data.spotMouvement = GetDirectionSpot(spotDirection.value);
+            data.spotColor = GetColorSpot(spotColor.value);
+            data.spotSize = GetDimensionSpot(spotDimension.value == 1);
+        }
         data.ambIntensity = GetIntensityAmbiance(ambianceIntensity.value);
         data.ambColor = GetColorAmbiance(ambianceColor.value);
 
@@ -193,12 +210,26 @@ public class LightManager : MonoBehaviour
     private void InitButtons()
     {
         VisualElement root = UIManager.instance.rootElement.Q("lights");
+        spotOnOff = root.Q<Toggle>("spotOnOff");
         spotPositions = root.Q<ToggleButtonGroup>("spotPad");
         spotDirection = root.Q<ToggleButtonGroup>("spotDirection");
         spotDimension = root.Q<SliderInt>("spotDimension");
         spotColor = root.Q<ToggleButtonGroup>("spotCouleur");
         ambianceIntensity = root.Q<SliderInt>("ambiantIntensity");
         ambianceColor = root.Q<ToggleButtonGroup>("ambiantCouleur");
+
+        spotOnOff.RegisterValueChangedCallback(evt =>
+        {
+            spotPositions.SetEnabled(evt.newValue);
+            spotDirection.SetEnabled(evt.newValue);
+            spotDimension.SetEnabled(evt.newValue);
+            spotColor.SetEnabled(evt.newValue);
+        });
+
+        ambianceIntensity.RegisterValueChangedCallback(evt =>
+        {
+            ambianceColor.SetEnabled(evt.newValue > 0);
+        });
     }
 
     private void ResetButtons()
@@ -209,18 +240,15 @@ public class LightManager : MonoBehaviour
         ClearGroup(spotDirection);
         ClearGroup(spotColor);
         ClearGroup(ambianceColor);
+        spotOnOff.value = false;
 
-        //quelle sont les valeurs par défaut ?
-        //spotDimension.value = 0;
+        //comment savoir si le spot a été modifié pour cette disquette ?
         //ambianceIntensity.value = 0;
     }
 
     private void ClearGroup(ToggleButtonGroup group)
     {
-        foreach (var toggle in group.Children())
-        {
-            if (toggle is Toggle t)
-                t.value = false;
-        }
+        int buttonCount = group.value.length;
+        group.value = new ToggleButtonGroupState(0, buttonCount);
     }
 }

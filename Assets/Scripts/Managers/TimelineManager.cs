@@ -28,7 +28,6 @@ public class TimelineManager : MonoBehaviour
     {
         //TEMP todo: associer pour chaque timestamp un temps
         durationTimestamp.Clear();
-        durationTimestamp.Add(10); //key 0 n'existe pas
         foreach (TextContent.Dialogue dialogue in TextContent.instance.timestamps)
         {
             if (dialogue.key < 1) continue;
@@ -59,10 +58,16 @@ public class TimelineManager : MonoBehaviour
         {
             VisualElement timelineInstance = timelineTemplate.Instantiate();
             VisualElement rootElement = timelineInstance.Q("case");
-            rootElement.style.width = durationTimestamp[i] * 150;
+            Label tiradeTimelineLabel = timelineInstance.Q<Label>("tirade-timeline");
+            Label timecodeLabel = timelineInstance.Q<Label>("timecode");
 
+            rootElement.style.width = durationTimestamp[i] * 150;
             rootElement.RegisterCallback<MouseEnterEvent>(HoverCase);
             rootElement.RegisterCallback<MouseLeaveEvent>(UnhoverCase);
+
+            TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(i+1);
+            tiradeTimelineLabel.text = dialogue.dialogue=="null" ? "Action" : $"{dialogue.character}<br>{dialogue.dialogue}";
+            timecodeLabel.text = $"{dialogue.key}";
 
             timelineHolder.contentContainer.Add(timelineInstance);
             timelineCases.Add(timelineInstance, null);
@@ -99,6 +104,10 @@ public class TimelineManager : MonoBehaviour
 
     public void PlaceDiskOnTimeline(SnapshotDisc snapshotDisc)
     {
+        if (timelineCases[currentTarget.parent]!=null)
+        {
+            DisksManager.instance.ShowDisk(timelineCases[currentTarget.parent], false);
+        }
         timelineCases[currentTarget.parent] = snapshotDisc;
         if (currentTarget != null)
             currentTarget.style.backgroundColor = Color.green;
