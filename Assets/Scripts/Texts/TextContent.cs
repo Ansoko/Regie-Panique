@@ -115,4 +115,15 @@ public class TextContent : MonoBehaviour
         return new();
     }
 
+    public int GetTotalDialogue()
+    {
+        int count = 0;
+        foreach (Dialogue dialogue in timestamps)
+        {
+            if (dialogue.key > -1)
+                count++;
+        }
+        return count;
+    }
+
 }

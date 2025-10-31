@@ -6,7 +6,7 @@
             <ui:VisualElement style="height: 100%; width: 10px; background-color: rgb(255, 0, 0);" />
         </ui:VisualElement>
         <ui:VisualElement name="script" style="position: relative; flex-shrink: 0; width: 20%; height: 75%; align-self: center; top: 3%;">
-            <ui:VisualElement name="tiradeHolder" style="flex-grow: 1; height: 90%; flex-wrap: wrap; align-content: flex-start; overflow: hidden;" />
+            <ui:VisualElement name="tiradeHolder" picking-mode="Ignore" style="flex-grow: 0; height: 430px; flex-wrap: wrap; align-content: flex-start; overflow: hidden;" />
             <ui:VisualElement name="scriptButtons" style="flex-grow: 0; flex-direction: row; align-items: center; justify-content: center; align-self: center; position: absolute; bottom: 0; height: 10%;">
                 <ui:Button text="Button" name="previousPageButton" />
                 <ui:Label text="Label" name="pageNumberLabel" />
