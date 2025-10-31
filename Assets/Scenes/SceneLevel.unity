@@ -530,7 +530,7 @@ MonoBehaviour:
   - applause
   - rideaux
   - Bruit de pas (Dev)
-  - Bad
+  - Badd
   - Good
   - Great
   - TakeDisk
@@ -880,8 +880,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13bf08347cc901a4884117776a3d7a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelineManager
-  speed: 0.05
-  timeBetweenScene: 10
+  speed: 0.01
+  timeBetweenScene: 2
   durationTimestamp:
   - 1
   - 2
