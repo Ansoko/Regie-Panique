@@ -1,48 +1,127 @@
 :root {
 }
 
-#spotPad > .unity-button-group {
+.unity-button-group {
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
-.padButton {
-    background-color: rgb(255, 0, 0);
+.unity-button {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    -unity-background-image-tint-color: rgba(255, 83, 83, 0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.padButton:hover {
-    background-color: rgb(0, 6, 255);
+.unity-button:hover {
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0.09);
 }
 
-.padButton:selected {
-    background-color: rgb(0, 255, 0);
+.unity-button:active {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
 }
 
-.padButton:active {
-    background-color: rgb(255, 117, 0);
+.unity-button:selected {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
 }
 
-.buttonColorWhite {
+#spotPad > .unity-button-group {
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-self: stretch;
 }
 
-.buttonColorBlue {
+#spotPad > .unity-button {
+    margin-top: 3px;
+    margin-right: 0;
+    margin-bottom: 4.4px;
+    margin-left: 0;
+    width: 67px;
+    height: 67px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
 }
 
-.buttonColorYellow {
+#spotDirection > .unity-button-group {
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: stretch;
+    margin-top: 7px;
+    margin-bottom: 0;
+    margin-left: 0;
+    height: 85px;
+    margin-right: 0;
 }
 
-.buttonColorPurple {
+.unity-toggle__input > VisualElement {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.buttonColorRed {
+Toggle:checked #unity-checkmark {
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
 }
 
-.buttonColorGreen {
+#spotOnOff > VisualElement > #unity-checkmark > VisualElement {
+    -unity-background-scale-mode: scale-to-fit;
+    background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=1052636741&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_2");
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.buttonColorBrown {
+#unity-dragger {
+    background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=-932393288&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_26");
+    height: 50px;
+    width: 20px;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-top: -25px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.buttonColorOrange {
+#unity-tracker {
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+#spotOnOff .unity-toggle__input:checked {
+    background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=1052636741&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_2");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#spotDimension .unity-toggle__input:checked {
+    background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=-1048481026&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_3");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#curtainOpening .unity-toggle__input:checked {
+    background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=171671404&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_1");
+    -unity-background-scale-mode: scale-to-fit;
 }

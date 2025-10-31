@@ -261,9 +261,22 @@ public class TimelineManager : MonoBehaviour
 
         if(nbrDiscPlayed > 1)
         {
-            nbrErrors += (nbrDiscPlayed - 1) * 2; //penalité pour chaque disque en trop
+            nbrErrors += (nbrDiscPlayed - 1);
         }
 
         Debug.Log($"Key {key} - Disques joués: {nbrDiscPlayed} - Erreurs: {nbrErrors}");
+
+        if(nbrErrors == 0)
+        {
+            AudioManager.Instance.PlaySoundByName("Great");
+        }
+        else if(nbrErrors <= 3)
+        {
+            AudioManager.Instance.PlaySoundByName("Good");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySoundByName("Bad");
+        }
     }
 }

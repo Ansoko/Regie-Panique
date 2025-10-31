@@ -43,9 +43,17 @@ public class LightManager : MonoBehaviour
     private ToggleButtonGroup spotPositions;
     private ToggleButtonGroup spotDirection;
     private ToggleButtonGroup spotColor;
-    private SliderInt spotDimension;
+    private Toggle spotDimension;
     private SliderInt ambianceIntensity;
+    private VisualElement ambIntensityValue;
     private ToggleButtonGroup ambianceColor;
+
+    [SerializeField] private Sprite noIntensity;
+    [SerializeField] private Sprite Int0;
+    [SerializeField] private Sprite Int25;
+    [SerializeField] private Sprite Int50;
+    [SerializeField] private Sprite Int75;
+    [SerializeField] private Sprite Int100;
 
     public static LightManager instance;
     private void Awake()
@@ -165,7 +173,21 @@ public class LightManager : MonoBehaviour
 
     private int GetIntensityAmbiance(int intensity)
     {
-        return maxAmbianceIntensity / 10 * intensity;
+        switch(intensity)
+        {
+            case 0:
+                return 0;
+            case 1:
+                return maxAmbianceIntensity / 4;
+            case 2:
+                return maxAmbianceIntensity / 2;
+            case 3:
+                return (maxAmbianceIntensity * 3) / 4;
+            case 4:
+                return maxAmbianceIntensity;
+            default:
+                return -1;
+        }
     }
 
     private string GetActivationSpot(bool value)
@@ -222,7 +244,7 @@ public class LightManager : MonoBehaviour
             data.spotPlacement = GetPositionSpot(spotPositions.value);
             data.spotMouvement = GetDirectionSpot(spotDirection.value);
             data.spotColor = GetColorSpot(spotColor.value);
-            data.spotSize = GetDimensionSpot(spotDimension.value == 1);
+            data.spotSize = GetDimensionSpot(spotDimension.value);
         }
         data.ambIntensity = GetIntensityAmbiance(ambianceIntensity.value);
         data.ambColor = GetColorAmbiance(ambianceColor.value);
@@ -238,10 +260,36 @@ public class LightManager : MonoBehaviour
         spotOnOff = root.Q<Toggle>("spotOnOff");
         spotPositions = root.Q<ToggleButtonGroup>("spotPad");
         spotDirection = root.Q<ToggleButtonGroup>("spotDirection");
-        spotDimension = root.Q<SliderInt>("spotDimension");
+        spotDimension = root.Q<Toggle>("spotDimension");
         spotColor = root.Q<ToggleButtonGroup>("spotCouleur");
-        ambianceIntensity = root.Q<SliderInt>("ambiantIntensity");
         ambianceColor = root.Q<ToggleButtonGroup>("ambiantCouleur");
+        ambianceIntensity = root.Q<SliderInt>("ambiantIntensity");
+
+        ambianceIntensity.RegisterValueChangedCallback(evt =>
+        {
+            ambIntensityValue = root.Q<VisualElement>("ambIntensityValues");
+            switch (evt.newValue)//between -1 and 4
+            {
+                case 0:
+                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int0);
+                    break;
+                case 1:
+                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int25);
+                    break;
+                case 2:
+                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int50);
+                    break;
+                case 3:
+                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int75);
+                    break;
+                case 4:
+                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int100);
+                    break;
+                default:
+                    ambIntensityValue.style.backgroundImage = new StyleBackground(noIntensity);
+                    break;
+            }
+        });
 
         spotOnOff.RegisterValueChangedCallback(evt =>
         {
