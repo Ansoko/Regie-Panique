@@ -176,15 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Programmation
-
-    - Anne-So
-
-
-
-    Sound Design
-
-    - Stan'
+  m_text: "D\xE9veloppement\n- Anne-So\n\n\nSound Design\n- Stan"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8eb612bb1c07be048aa52eeb2b62b30c, type: 2}
   m_sharedMaterial: {fileID: 1309153692484743786, guid: 8eb612bb1c07be048aa52eeb2b62b30c, type: 2}
