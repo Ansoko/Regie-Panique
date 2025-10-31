@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class UIScript : MonoBehaviour
@@ -48,7 +46,7 @@ public class UIScript : MonoBehaviour
             allItems.Add(tiradeInstance);
         }
 
-        UIManager.instance.rootElement.schedule.Execute(GeneratePages).StartingIn(100);
+        GeneratePages();
     }
 
     private void GeneratePages()
@@ -64,32 +62,32 @@ public class UIScript : MonoBehaviour
             tiradeHolder.Add(item);
             tiradeHolder.MarkDirtyRepaint();
         }
-        foreach (var item in allItems)
+        UIManager.instance.rootElement.schedule.Execute(() =>
         {
-            // Attendre que le layout soit validé pour mesurer correctement
-            float itemHeight = item.resolvedStyle.height;
-            if (float.IsNaN(itemHeight))
-                itemHeight = 100f;
-            Debug.Log($"Item Height: {itemHeight}");
 
-            // Si ça dépasse, on commence une nouvelle page
-            if (currentHeight + itemHeight > maxHeight && currentList.Count > 0)
+            foreach (var item in allItems)
             {
-                pages.Add(new List<VisualElement>(currentList));
-                currentList.Clear();
-                currentHeight = 0;
+                float itemHeight = item.resolvedStyle.height;
+                if (float.IsNaN(itemHeight))
+                    itemHeight = 100f;
+
+                if (currentHeight + itemHeight > maxHeight && currentList.Count > 0)
+                {
+                    pages.Add(new List<VisualElement>(currentList));
+                    currentList.Clear();
+                    currentHeight = 0;
+                }
+
+                currentList.Add(item);
+                currentHeight += itemHeight;
             }
 
-            currentList.Add(item);
-            currentHeight += itemHeight;
-        }
+            if (currentList.Count > 0)
+                pages.Add(currentList);
 
-        // Ajouter la dernière page
-        if (currentList.Count > 0)
-            pages.Add(currentList);
+            UpdatePage();
 
-        Debug.Log($"Total Pages: {pages.Count}");
-        UpdatePage();
+        }).StartingIn(0);
     }
 
     private void UpdatePage()
@@ -119,56 +117,5 @@ public class UIScript : MonoBehaviour
         if (currentPage >= pages.Count - 1) return;
         currentPage++;
         UpdatePage();
-    }
-
-
-    //private void PreviousPage()
-    //{
-    //    if (currentPage <= 0) return;
-    //    currentPage--;
-    //    SetPage(currentPage);
-    //}
-
-    //private void NextPage()
-    //{
-    //    if (currentPage >= totalPages - 1) return;
-    //    currentPage++;
-    //    SetPage(currentPage);
-    //}
-
-
-    //private void SetPage(int pageNumber)
-    //{
-    //    tiradeHolder.Clear();
-    //    for (int i = 0; i < tiradesByPage; i++)
-    //    {
-    //        VisualElement tiradeInstance = tiradeTemplate.Instantiate();
-
-    //        TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(pageNumber * tiradesByPage + i + 1);
-    //        tiradeInstance.Q<Label>("IDLabel").text = dialogue.key.ToString();
-    //        tiradeInstance.Q<Label>("RegieLabel").text = dialogue.noteDirector != "null" ? dialogue.noteDirector : "";
-    //        tiradeInstance.Q<Label>("TiradeLabel").text = $"{dialogue.character} – {dialogue.dialogue}";
-
-    //        tiradeHolder.Add(tiradeInstance);
-    //    }
-        
-    //    pageNumberText.text = $"Page {pageNumber + 1} / {totalPages}";
-    //    if(pageNumber == 0)
-    //    {
-    //        previousPage.SetEnabled(false);
-    //    }
-    //    else
-    //    {
-    //        previousPage.SetEnabled(true);
-    //    }
-    //    if (pageNumber == totalPages - 1)
-    //    {
-    //        nextPage.SetEnabled(false);
-    //    }
-    //    else
-    //    {
-    //        nextPage.SetEnabled(true);
-    //    }
-    //}
-    
+    }    
 }

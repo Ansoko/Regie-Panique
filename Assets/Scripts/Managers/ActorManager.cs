@@ -44,7 +44,7 @@ public class ActorManager : MonoBehaviour
             float duration = 0;
             if (dialogue.character == "Rideau")
             {
-                duration = 10;
+                duration = TimelineManager.instance.timeBetweenScene;
             }
             else if(dialogue.key >= 1)
             {

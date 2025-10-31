@@ -18,6 +18,7 @@ public class DisksManager : MonoBehaviour
 
     public Action<SnapshotDisc> OnCreateDisk;
     public Action<SnapshotDisc> OnPlayDisk;
+    public Func<SnapshotDisc.DiscData> OnGetSceneParameters;
 
     public static DisksManager instance;
     private void Awake()
@@ -174,6 +175,12 @@ public class DisksManager : MonoBehaviour
     public void PlayDisk(SnapshotDisc currentDisc)
     {
         OnPlayDisk?.Invoke(currentDisc);
+    }
+
+    public SnapshotDisc.DiscData GetSceneParameters()
+    {
+        SnapshotDisc.DiscData data = (OnGetSceneParameters?.Invoke()).GetValueOrDefault();
+        return data;
     }
 
 }

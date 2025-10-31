@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/style.uss?fileID=7433441132597879392&amp;guid=147337c76091e674da996ba29e49d4a9&amp;type=3#style" />
-    <ui:VisualElement name="board" style="flex-grow: 0; height: 60%; bottom: 1px; position: absolute; right: 0; left: 0; background-color: rgb(255, 255, 255); align-self: center; flex-direction: row; background-image: none; -unity-background-scale-mode: scale-to-fit; -unity-slice-type: sliced; background-position-y: center;">
+    <ui:VisualElement name="board" style="flex-grow: 0; height: 60%; bottom: 1px; position: absolute; right: 0; left: 0; background-color: rgb(255, 255, 255); align-self: center; flex-direction: row; background-image: none; -unity-background-scale-mode: scale-to-fit; -unity-slice-type: sliced; background-position-y: bottom 0; background-position-x: right 0;">
         <ui:VisualElement name="timeline" style="top: 0%; height: 20%; flex-direction: row; width: 598px;">
             <ui:ScrollView mode="Horizontal" elasticity="0" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" picking-mode="Ignore" mouse-wheel-scroll-size="0" touch-scroll-type="Unrestricted" elastic-animation-interval-ms="0" name="timelineScroll" style="left: 50%; height: 100%; width: 50%; background-color: rgba(87, 87, 87, 0.57);" />
             <ui:VisualElement style="height: 100%; width: 10px; background-color: rgb(255, 0, 0);" />
@@ -81,5 +81,6 @@
             </ui:VisualElement>
             <ui:Button text="Créer disquette" name="CreateDisk" />
         </ui:VisualElement>
+        <ui:VisualElement enabled="true" style="flex-grow: 1; position: absolute; height: 460px; width: 1456px; bottom: 12px; right: 16px; background-image: url(&quot;project://database/Assets/Sprites/UI/Console1.png?fileID=1722287647&amp;guid=78101ac5efa180e4c9bd300436618d97&amp;type=3#Console1_0&quot;); -unity-background-scale-mode: scale-to-fit; display: none; visibility: visible;" />
     </ui:VisualElement>
 </ui:UXML>

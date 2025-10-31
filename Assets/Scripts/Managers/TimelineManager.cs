@@ -7,12 +7,15 @@ using UnityEngine.UIElements;
 public class TimelineManager : MonoBehaviour
 {
     public float speed = 1f;
+    public float timeBetweenScene = 30f;
     [SerializeField] private List<float> durationTimestamp;
     [SerializeField] private VisualTreeAsset timelineTemplate;
     private ScrollView timelineHolder;
     private float totalDuration = 0;
     private float widthTimeline = 0;
     public VisualElement currentTarget;
+    private VisualElement currentplayingElement;
+    private int currentPlayingKey = 0;
     private float elipsedTime = 0f;
 
     private Dictionary<VisualElement, SnapshotDisc> timelineCases = new();
@@ -34,8 +37,8 @@ public class TimelineManager : MonoBehaviour
 
             if (dialogue.character == "Rideau")
             {
-                durationTimestamp.Add(10);
-                totalDuration += 10;
+                durationTimestamp.Add(timeBetweenScene);
+                totalDuration += timeBetweenScene;
             }
             else
             {
@@ -113,6 +116,7 @@ public class TimelineManager : MonoBehaviour
             currentTarget.style.backgroundColor = Color.green;
     }
 
+    private int nbrDiscPlayed = 0;
     private IEnumerator PlayTimeline()
     {
         elipsedTime = 0f;
@@ -121,16 +125,21 @@ public class TimelineManager : MonoBehaviour
             timelineHolder.scrollOffset = new Vector2((elipsedTime / totalDuration) * widthTimeline, 0);
 
             VisualElement firstVisible = GetFirstVisibleElement();
-            if (firstVisible != null && currentPlayingDisc != timelineCases[firstVisible])
+            if(currentplayingElement != firstVisible) //début d'une nouvelle case
             {
-                if (currentPlayingDisc != null)
-                {
-                    //TODO: check scoring for the disc that just ended
-                }
-                //Destroy(currentPlayingDisc?.gameObject);
+                CheckScoring(currentPlayingKey, nbrDiscPlayed);
+
+                currentPlayingKey++;
+                currentplayingElement = firstVisible;
+                nbrDiscPlayed = 0;
+            }
+
+            if (firstVisible != null && currentPlayingDisc != timelineCases[firstVisible]) //changment de disk
+            {
                 currentPlayingDisc = timelineCases[firstVisible];
                 if (currentPlayingDisc != null)
                 {
+                    nbrDiscPlayed++;
                     DisksManager.instance.PlayDisk(currentPlayingDisc);
                 }
             }
@@ -158,5 +167,103 @@ public class TimelineManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void CheckScoring(int key, int nbrDiscPlayed)
+    {
+        if(key < 1) return;
+
+        //TODO: check scoring for the disc that just ended
+        TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(key);
+        SnapshotDisc.DiscData scene = DisksManager.instance.GetSceneParameters();
+
+        int nbrErrors = 0;
+
+        //rideau
+        if (dialogue.rideau == "Fermé" && scene.curtainOpening == 1)
+        {
+            nbrErrors += 13; //all error !!!!!
+        }
+        else
+        {
+            if(dialogue.rideau == "Ouvert" && scene.curtainOpening == 0)
+            {
+                nbrErrors++;
+            }
+
+            //spot
+            if (dialogue.onOffSpot == "Allumé")
+            {
+                if (dialogue.onOffSpot != scene.hasSpot)
+                {
+                    nbrErrors += 5;
+                }
+                else
+                {
+                    if (LightManager.instance.spotColorDict[dialogue.couleurSpot] != scene.spotColor)
+                    {
+                        nbrErrors++;
+                    }
+                    if (dialogue.diametreSpot == "Petit" && scene.spotSize == 1
+                        || dialogue.diametreSpot == "Grand" && scene.spotSize == 0)
+                    {
+                        nbrErrors++;
+                    }
+                    if (dialogue.placementGrille9 != scene.spotPlacement)
+                    {
+                        nbrErrors++;
+                    }
+                    if (dialogue.mouvement == "Fixe" && !(scene.spotMouvement == -1)
+                        || dialogue.mouvement == "G 2" && scene.spotMouvement == 0
+                        || dialogue.mouvement == "G 1" && scene.spotMouvement == 1
+                        || dialogue.mouvement == "D 1" && scene.spotMouvement == 2
+                        || dialogue.mouvement == "D 2" && scene.spotMouvement == 3)
+                    {
+                        nbrErrors++;
+                    }
+                }
+            }
+            else if (dialogue.onOffSpot != scene.hasSpot)
+            {
+                nbrErrors++;
+            }
+
+            //ambiance
+            if (dialogue.intensiteAmb > 0 && dialogue.intensiteAmb != scene.ambIntensity)
+            {
+                nbrErrors++;
+            }
+            if (dialogue.couleurAmb != "null" && LightManager.instance.ambColorDict[dialogue.couleurAmb] != scene.ambColor)
+            {
+                nbrErrors++;
+            }
+
+            //decors
+            if (dialogue.decorL1 != scene.decorsL1)
+            {
+                nbrErrors++;
+            }
+            if (dialogue.decorL2 != scene.decorsL2)
+            {
+                nbrErrors++;
+            }
+            if (dialogue.decorL3 != scene.decorsL3)
+            {
+                nbrErrors++;
+            }
+
+            //sound
+            if (dialogue.sons != scene.soundType)
+            {
+                nbrErrors++;
+            }
+        }
+
+        if(nbrDiscPlayed > 1)
+        {
+            nbrErrors += (nbrDiscPlayed - 1) * 2; //penalité pour chaque disque en trop
+        }
+
+        Debug.Log($"Key {key} - Disques joués: {nbrDiscPlayed} - Erreurs: {nbrErrors}");
     }
 }

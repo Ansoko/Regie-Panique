@@ -17,6 +17,26 @@ public class LightManager : MonoBehaviour
     [SerializeField] private List<Color> ambiantColors;
     [SerializeField] private int maxAmbianceIntensity = 10000;
 
+    public Dictionary<string, int> spotColorDict = new()
+    {
+        { "Blanc", 0 },
+        { "Rouge", 1 },
+        { "Bleu", 2 },
+        { "Vert", 3 },
+        { "Violet", 4 },
+        { "Jaune", 5 },
+        { "Orange", 6 },
+        { "Marron", 7 },
+    };
+
+    public Dictionary<string, int> ambColorDict = new()
+    {
+        { "Blanc", 0 },
+        { "Orange", 1 },
+        { "Rouge", 2 },
+        { "Violet", 3 }
+    };
+
     int currentSpotPosition = 4;
 
     private Toggle spotOnOff;
@@ -27,6 +47,11 @@ public class LightManager : MonoBehaviour
     private SliderInt ambianceIntensity;
     private ToggleButtonGroup ambianceColor;
 
+    public static LightManager instance;
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -113,7 +138,7 @@ public class LightManager : MonoBehaviour
         var selected = positionIndex.GetActiveOptions(stackalloc int[positionIndex.length]);
         if (selected.Length <= 0)
             return -1;
-        return selected[0];
+        return selected[0]; //0=<<, 1=<, 2=>, 3=>>
     }
 
     private int GetDimensionSpot(bool big) // false=small, true=big
