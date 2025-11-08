@@ -23,8 +23,7 @@ public class AudioManager : MonoBehaviour
         musicSource.PlayOneShot(audioClip);
     }
 
-    private int currentImportance = 0;
-    public void PlaySoundByName(string name, int importance=0)
+    public void PlaySoundByName(string name)
     {
         if(audioNames.Contains(name) == false)
         {
@@ -33,17 +32,12 @@ public class AudioManager : MonoBehaviour
         }
         int index = audioNames.IndexOf(name);
         if (index >= 0 && index < listAudio.Count)
-            PlaySFX(listAudio[index], importance);
+            PlaySFX(listAudio[index]);
     }
 
-    public void PlaySFX(AudioClip audioClip, int importance = 0)
+    public void PlaySFX(AudioClip audioClip)
     {
         sfxAudioSource.PlayOneShot(audioClip);
-        //if (sfxAudioSource.isPlaying)
-        //    sfxAudioSource.Stop();
-        //if(importance >= currentImportance)
-        //    sfxAudioSource.PlayOneShot(audioClip);
-        //currentImportance = importance;
     }
 
     public void StopSFX(string byName="")

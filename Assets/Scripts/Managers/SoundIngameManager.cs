@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static DisksManager;
 
 public class SoundIngameManager : MonoBehaviour
 {
@@ -52,7 +53,7 @@ public class SoundIngameManager : MonoBehaviour
             currentIndex = nameSounds.Count - 1;
         labelSound.text = nameSounds[currentIndex];
     }
-    private void RetreaveParameters(SnapshotDisc currentDisc)
+    private void RetreaveParameters(Disk currentDisc)
     {
         SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
         data.soundType = nameSounds[currentIndex];
@@ -62,7 +63,7 @@ public class SoundIngameManager : MonoBehaviour
         currentDisc.AddDataToDisk(data);
     }
 
-    private void PlayDisc(SnapshotDisc currentDisc)
+    private void PlayDisc(Disk currentDisc)
     {
         if(currentDisc.data.soundType == "Pas de bruitage") return;
         AudioManager.Instance.PlaySFX(listSounds[nameSounds.IndexOf(currentDisc.data.soundType)]);

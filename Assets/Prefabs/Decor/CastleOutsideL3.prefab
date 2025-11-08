@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: efafff4563a2c1749af08fb6be09c46d, type: 3}
+    - target: {fileID: 1548897715567966306, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727164794849858386, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866314569311857068, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_Name
       value: CastleOutsideL3
@@ -50,6 +58,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6625477970914303220, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078451045947046934, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

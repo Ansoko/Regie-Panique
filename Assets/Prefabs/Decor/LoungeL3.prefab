@@ -8,10 +8,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 531194428969171125, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7bcf2b75609ea7847aaf628f0f7d10eb, type: 3}
     - target: {fileID: 772316222675287018, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c30f3b42d8265ab45ab79f97d629fc6c, type: 3}
+    - target: {fileID: 2901127542402075107, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e9b390e404e126c4d9eae4881c948a98, type: 3}
     - target: {fileID: 5866314569311857068, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
       propertyPath: m_Name
       value: LoungeL3
@@ -56,6 +64,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8407275872200126872, guid: 11c83d4925e235e43ada434d89c51678, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e9b390e404e126c4d9eae4881c948a98, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

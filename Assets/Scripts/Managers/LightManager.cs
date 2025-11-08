@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static DisksManager;
 
 public class LightManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class LightManager : MonoBehaviour
 
     [SerializeField] private List<Color> spotColors;
     [SerializeField] private List<Color> ambiantColors;
-    [SerializeField] private int maxAmbianceIntensity = 10000;
+    [SerializeField] private const int maxAmbianceIntensity = 8000;
 
     public Dictionary<string, int> spotColorDict = new()
     {
@@ -192,10 +193,11 @@ public class LightManager : MonoBehaviour
 
     private string GetActivationSpot(bool value)
     {
-        return value ? "Allumé" : "Éteint";
+        //is inverted
+        return value ? "Éteint" : "Allumé";
     }
 
-    private void PlayDisc(SnapshotDisc currentDisc)
+    private void PlayDisc(Disk currentDisc)
     {
         SnapshotDisc.DiscData currentDiscData = currentDisc.data;
 
@@ -227,7 +229,7 @@ public class LightManager : MonoBehaviour
             currentSpotPosition = currentDiscData.spotPlacement;
         }
         if(currentDiscData.spotMouvement > -1)
-            StartCoroutine(MoveSpot(currentDisc.time, currentDiscData.spotMouvement));
+            StartCoroutine(MoveSpot(1, currentDiscData.spotMouvement));
 
         if (currentDiscData.ambIntensity != -1)
             ambiance.intensity = currentDiscData.ambIntensity;
@@ -235,23 +237,51 @@ public class LightManager : MonoBehaviour
             ambiance.color = ambiantColors[currentDiscData.ambColor];
     }
 
-    private void RetreaveParameters(SnapshotDisc currentDisc)
+    private void RetreaveParameters(Disk currentDisc)
     {
         SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
         data.hasSpot = GetActivationSpot(spotOnOff.value);
         if(data.hasSpot == "Allumé")
         {
-            data.spotPlacement = GetPositionSpot(spotPositions.value);
-            data.spotMouvement = GetDirectionSpot(spotDirection.value);
-            data.spotColor = GetColorSpot(spotColor.value);
             data.spotSize = GetDimensionSpot(spotDimension.value);
         }
+        data.spotPlacement = GetPositionSpot(spotPositions.value);
+        data.spotMouvement = GetDirectionSpot(spotDirection.value);
+        data.spotColor = GetColorSpot(spotColor.value);
+
         data.ambIntensity = GetIntensityAmbiance(ambianceIntensity.value);
         data.ambColor = GetColorAmbiance(ambianceColor.value);
 
         ResetButtons();
 
         currentDisc.AddDataToDisk(data);
+    }
+
+    public SnapshotDisc.DiscData GetLightsFromScene()
+    {
+        SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
+        data.hasSpot = spot.enabled ? "Allumé" : "Éteint";
+
+        if(data.hasSpot == "Allumé")
+        {
+            data.spotSize = spot.spotAngle == 45 ? 1 : 0;
+            data.spotColor = spotColors.IndexOf(spot.color);
+            data.spotPlacement = currentSpotPosition;
+        }
+
+        data.ambIntensity = (int)ambiance.intensity switch
+        {
+            maxAmbianceIntensity => 100,
+            (maxAmbianceIntensity * 3) / 4 => 75,
+            maxAmbianceIntensity / 2 => 50,
+            maxAmbianceIntensity / 4 => 25,
+            0 => 0,
+            _ => -1,
+        };
+        if (ambiance.intensity > 0)
+            data.ambColor = ambiantColors.IndexOf(ambiance.color);
+
+        return data;
     }
 
     private void InitButtons()
@@ -268,55 +298,26 @@ public class LightManager : MonoBehaviour
         ambianceIntensity.RegisterValueChangedCallback(evt =>
         {
             ambIntensityValue = root.Q<VisualElement>("ambIntensityValues");
-            switch (evt.newValue)//between -1 and 4
+            ambIntensityValue.style.backgroundImage = evt.newValue switch //between -1 and 4
             {
-                case 0:
-                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int0);
-                    break;
-                case 1:
-                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int25);
-                    break;
-                case 2:
-                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int50);
-                    break;
-                case 3:
-                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int75);
-                    break;
-                case 4:
-                    ambIntensityValue.style.backgroundImage = new StyleBackground(Int100);
-                    break;
-                default:
-                    ambIntensityValue.style.backgroundImage = new StyleBackground(noIntensity);
-                    break;
-            }
-        });
-
-        spotOnOff.RegisterValueChangedCallback(evt =>
-        {
-            spotPositions.SetEnabled(evt.newValue);
-            spotDirection.SetEnabled(evt.newValue);
-            spotDimension.SetEnabled(evt.newValue);
-            spotColor.SetEnabled(evt.newValue);
-        });
-
-        ambianceIntensity.RegisterValueChangedCallback(evt =>
-        {
-            ambianceColor.SetEnabled(evt.newValue > 0);
+                0 => new StyleBackground(Int0),
+                1 => new StyleBackground(Int25),
+                2 => new StyleBackground(Int50),
+                3 => new StyleBackground(Int75),
+                4 => new StyleBackground(Int100),
+                _ => new StyleBackground(noIntensity),
+            };
         });
     }
 
     private void ResetButtons()
     {
-        //spotPositions.SetValueWithoutNotify(ToggleButtonGroupState.CreateFromOptions(new List<bool>()));
-
         ClearGroup(spotPositions);
         ClearGroup(spotDirection);
         ClearGroup(spotColor);
         ClearGroup(ambianceColor);
-        spotOnOff.value = false;
-
-        //comment savoir si le spot a été modifié pour cette disquette ?
-        //ambianceIntensity.value = 0;
+        //spotOnOff.value = true;
+        ambianceIntensity.value = -1;
     }
 
     private void ClearGroup(ToggleButtonGroup group)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static DisksManager;
 
 public class DecorsManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class DecorsManager : MonoBehaviour
     private int currentIndexL2 = 0;
     private int currentIndexL3 = 0;
     private GameObject currentDecorL1, currentDecorL2, currentDecorL3;
+    private int currentDecorIndexL1 = -1, currentDecorIndexL2 = -1, currentDecorIndexL3 = -1;
+    private bool curtainIsOpen = true;
 
     [Header("Curtain")]
     [SerializeField] private GameObject leftCurtain;
@@ -36,13 +39,19 @@ public class DecorsManager : MonoBehaviour
     private VisualElement imgDecorsL1, imgDecorsL2, imgDecorsL3;
     private Toggle curtainToggle;
 
+    public static DecorsManager instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         UIManager.instance.OnInitButtons += InitButtons;
         DisksManager.instance.OnPlayDisk += PlayDisc;
         DisksManager.instance.OnCreateDisk += RetreaveParameters;
 
-        TriggerOpenCurtains();
+        TriggerCloseCurtains();
     }
 
     private IEnumerator OpenCurtains()
@@ -67,7 +76,10 @@ public class DecorsManager : MonoBehaviour
 
     public void TriggerOpenCurtains()
     {
-        AudioManager.Instance.PlaySoundByName("rideaux", 1);
+        if(curtainIsOpen)
+            return;
+        curtainIsOpen = true;
+        AudioManager.Instance.PlaySoundByName("rideaux");
         StartCoroutine(OpenCurtains());
     }
 
@@ -93,12 +105,15 @@ public class DecorsManager : MonoBehaviour
 
     public void TriggerCloseCurtains()
     {
-        AudioManager.Instance.PlaySoundByName("rideaux", 1);
+        if (!curtainIsOpen)
+            return;
+        curtainIsOpen = false;
+        AudioManager.Instance.PlaySoundByName("rideaux");
         StartCoroutine(CloseCurtains());
     }
 
 
-    private void RetreaveParameters(SnapshotDisc currentDisc)
+    private void RetreaveParameters(Disk currentDisc)
     {
         SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
         if (currentIndexL1 > 0)
@@ -107,7 +122,7 @@ public class DecorsManager : MonoBehaviour
             data.decorsL2 = nameDecorsL2[currentIndexL2];
         if (currentIndexL3 > 0)
             data.decorsL3 = nameDecorsL3[currentIndexL3];
-        data.curtainOpening = curtainToggle.value ? 1 : 0;
+        data.curtainOpening = curtainToggle.value ? 0 : 1;
 
         ResetButtons();
 
@@ -190,30 +205,48 @@ public class DecorsManager : MonoBehaviour
         imgDecorsL3.style.backgroundImage = new StyleBackground(listDecorsL3[0]);
     }
 
-    private void PlayDisc(SnapshotDisc currentDisc)
+    private void PlayDisc(Disk currentDisc)
     {
         if(currentDisc.data.decorsL1 != null)
         {
             Destroy(currentDecorL1);
             int indexL1 = nameDecorsL1.IndexOf(currentDisc.data.decorsL1);
             currentDecorL1 = Instantiate(GameObjectDecorsL1[indexL1], decorParent);
+            currentDecorIndexL1 = indexL1;
         }
         if (currentDisc.data.decorsL2 != null)
         {
             Destroy(currentDecorL2);
             int indexL2 = nameDecorsL2.IndexOf(currentDisc.data.decorsL2);
             currentDecorL2 = Instantiate(GameObjectDecorsL2[indexL2], decorParent);
+            currentDecorIndexL2 = indexL2;
         }
         if (currentDisc.data.decorsL3 != null)
         {
             Destroy(currentDecorL3);
             int indexL3 = nameDecorsL3.IndexOf(currentDisc.data.decorsL3);
             currentDecorL3 = Instantiate(GameObjectDecorsL3[indexL3], decorParent);
+            currentDecorIndexL3 = indexL3;
         }
 
         if (currentDisc.data.curtainOpening == 1)
             TriggerOpenCurtains();
         else if (currentDisc.data.curtainOpening == 0)
             TriggerCloseCurtains();
+    }
+
+    public SnapshotDisc.DiscData GetDecorFromScene()
+    {
+        SnapshotDisc.DiscData data = SnapshotDisc.DiscData.CreateDefault();
+
+        if (currentDecorIndexL1 > 0)
+            data.decorsL3 = nameDecorsL1[currentDecorIndexL1];
+        if (currentDecorIndexL2 > 0)
+            data.decorsL2 = nameDecorsL2[currentDecorIndexL2];
+        if (currentDecorIndexL3 > 0)
+            data.decorsL1 = nameDecorsL3[currentDecorIndexL3];
+
+        data.curtainOpening = curtainIsOpen ? 1 : 0;
+        return data;
     }
 }

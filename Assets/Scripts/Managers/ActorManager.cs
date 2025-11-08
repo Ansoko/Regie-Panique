@@ -18,6 +18,12 @@ public class ActorManager : MonoBehaviour
     [SerializeField] private List<int> indexPositions;
     [SerializeField] private List<Transform> transformPositions;
 
+    public static ActorManager instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         actors.Add("Mère Ubu", mother);
@@ -31,11 +37,9 @@ public class ActorManager : MonoBehaviour
         {
             positions.Add(indexPositions[i], transformPositions[i]);
         }
-
-        StartCoroutine(StartThePlay());
     }
 
-    private IEnumerator StartThePlay()
+    public IEnumerator StartThePlay()
     {
         foreach (TextContent.Dialogue dialogue in TextContent.instance.timestamps)
         {

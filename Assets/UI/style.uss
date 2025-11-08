@@ -113,7 +113,21 @@ Toggle:checked #unity-checkmark {
 
 #spotOnOff .unity-toggle__input:checked {
     background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=1052636741&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_2");
+    background-color: rgba(255, 255, 255, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    -unity-slice-scale: 0;
     -unity-background-scale-mode: scale-to-fit;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
 }
 
 #spotDimension .unity-toggle__input:checked {
@@ -124,4 +138,8 @@ Toggle:checked #unity-checkmark {
 #curtainOpening .unity-toggle__input:checked {
     background-image: url("project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=171671404&guid=1d142e38f7c00f343959d4dc9275ab42&type=3#Console_Spritesheet_1");
     -unity-background-scale-mode: scale-to-fit;
+}
+
+#unity-content-viewport {
+    overflow: visible;
 }

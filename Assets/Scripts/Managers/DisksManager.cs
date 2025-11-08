@@ -1,24 +1,29 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static SnapshotDisc;
+using Random = UnityEngine.Random;
 
 public class DisksManager : MonoBehaviour
 {
-    [SerializeField] private Camera mainCamera;
-    private GameObject diskSelected;
-    [SerializeField] private float mouseDragPhysicsSpeed = 10;
-    [SerializeField] private float heightDiskDrag = 0.8f;
-    [SerializeField] private float heightDiskPlaced = 0.8f;
-    private bool pressed = false;
+    [SerializeField] private VisualTreeAsset templateCardElement;
 
-    [SerializeField] private SnapshotDisc templateDisc;
-    [SerializeField] private Transform disksParent;
+    [Header("Physique simulée")]
+    public float moveSpeed = 50f;
+    public float friction = 0.98f;
+    public float repelForce = 100f;
+    public float boundaryBounce = 0.5f;
+    public float simulationInterval = 0.016f;
 
-    public Action<SnapshotDisc> OnCreateDisk;
-    public Action<SnapshotDisc> OnPlayDisk;
-    public Func<SnapshotDisc.DiscData> OnGetSceneParameters;
+    private VisualElement root;
+    private List<Disk> disks = new();
+    private Coroutine physicsCoroutine;
+    private Disk currentDisk;
+
+    public Action<Disk> OnCreateDisk;
+    public Action<Disk> OnPlayDisk;
 
     public static DisksManager instance;
     private void Awake()
@@ -26,136 +31,152 @@ public class DisksManager : MonoBehaviour
         instance = this;
     }
 
-    private void Start()
+    public class Disk
+    {
+        public VisualElement element;
+        public Vector2 velocity;
+        public bool isDragging;
+        public Vector2 dragOffset;
+        public SnapshotDisc.DiscData data;
+
+        public void AddDataToDisk(DiscData newData)
+        {
+            if (newData.hasSpot != null)
+                data.hasSpot = newData.hasSpot;
+            if (newData.spotColor != -1)
+                data.spotColor = newData.spotColor;
+            if (newData.spotSize != -1)
+                data.spotSize = newData.spotSize;
+            if (newData.spotPlacement != -1)
+                data.spotPlacement = newData.spotPlacement;
+            if (newData.spotMouvement != -1)
+                data.spotMouvement = newData.spotMouvement;
+            if (newData.ambColor != -1)
+                data.ambColor = newData.ambColor;
+            if (newData.ambIntensity != -1)
+                data.ambIntensity = newData.ambIntensity;
+            if (newData.decorsL1 != null)
+                data.decorsL1 = newData.decorsL1;
+            if (newData.decorsL2 != null)
+                data.decorsL2 = newData.decorsL2;
+            if (newData.decorsL3 != null)
+                data.decorsL3 = newData.decorsL3;
+            if (newData.soundType != null)
+                data.soundType = newData.soundType;
+            if (newData.curtainOpening != -1)
+                data.curtainOpening = newData.curtainOpening;
+        }
+    }
+
+    void Start()
     {
         UIManager.instance.OnInitButtons += InitButtons;
-        InputSystem.actions.FindAction("Click").started += SelectDisk;
-        InputSystem.actions.FindAction("Click").canceled += ReleaseDisk;
+        root = UIManager.instance.rootElement;
     }
 
-    private void SelectDisk(InputAction.CallbackContext ctx)
+    /*
+    private IEnumerator PhysicsLoop()
     {
-        Vector2 screenpos = Mouse.current.position.value;
-        Vector3 camdis = new Vector3(screenpos.x, screenpos.y, mainCamera.transform.position.y);
-        Ray ray = mainCamera.ScreenPointToRay(camdis);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-            if (hit.collider != null && hit.collider.attachedRigidbody != null)
-            {
-                Rigidbody rb = hit.collider.attachedRigidbody;
-                SelectDisk(rb.gameObject, hit.collider);
-                return;
-            }
+        var wait = new WaitForSeconds(simulationInterval);
 
-        diskSelected = null;
+        while (disks.Count > 0)
+        {
+            StepPhysics(simulationInterval);
+            yield return wait;
+        }
     }
 
-    private void SelectDisk(GameObject disc, Collider col)
+    private void StepPhysics(float deltaTime)
     {
-        diskSelected = disc.gameObject;
-        pressed = true;
-        diskSelected.transform.rotation = Quaternion.Euler(Vector3.up*180);
-        col.enabled = false;
+        float maxX = root.resolvedStyle.width;
+        float maxY = root.resolvedStyle.height;
+
+        foreach (var disk in disks)
+        {
+            if (disk.isDragging)
+                continue;
+
+            Vector2 pos = new Vector2(disk.element.resolvedStyle.left, disk.element.resolvedStyle.top);
+            pos += (disk.velocity * deltaTime);
+            disk.velocity *= friction;
+
+
+            disk.element.style.left = pos.x;
+            disk.element.style.top = pos.y;
+        }
+    }
+    */
+
+
+    private void OnPointerDown(PointerDownEvent evt, Disk disk)
+    {
+        disk.isDragging = true;
+        disk.dragOffset = evt.localPosition;
+        disk.velocity = Vector2.zero;
+        disk.element.CapturePointer(evt.pointerId);
+        disk.element.pickingMode = PickingMode.Ignore;
+        currentDisk = disk;
+
         AudioManager.Instance.PlaySoundByName("TakeDisk");
-
-        StartCoroutine(MoveDisk());
     }
 
-    private IEnumerator MoveDisk()
+    private void OnPointerMove(PointerMoveEvent evt, Disk disk)
     {
-        if (diskSelected == null) yield break;
-        diskSelected.TryGetComponent<Rigidbody>(out var rb);
-        if (rb == null) yield break;
-
-        do
-        {
-            diskSelected.transform.localPosition = new Vector3(diskSelected.transform.localPosition.x, heightDiskDrag, diskSelected.transform.localPosition.z);
-
-            Vector3 direction = cursorOnTransform - diskSelected.transform.position;
-            rb.linearVelocity = direction * mouseDragPhysicsSpeed;
-
-            yield return null;
-        }
-        while (pressed);
+        if (!disk.isDragging) return;
+        
+        Vector2 newPos = (Vector2)evt.position - disk.dragOffset;
+        disk.element.style.left = newPos.x;
+        disk.element.style.top = newPos.y;
+        disk.velocity = evt.deltaPosition;
     }
 
-    private Vector3 cursorWorldPosOnNCP
+    private void OnPointerUp(PointerUpEvent evt, Disk disk)
     {
-        get
+        disk.isDragging = false;
+        disk.element.ReleasePointer(evt.pointerId);
+
+        if (TimelineManager.instance.PlaceDiskOnTimeline(currentDisk, evt.position))
         {
-            Vector2 mousePosition = InputSystem.actions.FindAction("Point").ReadValue<Vector2>();
-            return Camera.main.ScreenToWorldPoint(
-                new Vector3(mousePosition.x,
-                mousePosition.y,
-                Camera.main.nearClipPlane));
-        }
-    }
-
-    private Vector3 cameraToCursor
-    {
-        get
-        {
-            return cursorWorldPosOnNCP - Camera.main.transform.position;
-        }
-    }
-
-    private Vector3 cursorOnTransform
-    {
-        get
-        {
-            Vector3 camToTrans = diskSelected.transform.position - Camera.main.transform.position;
-            return Camera.main.transform.position +
-                cameraToCursor *
-                (Vector3.Dot(Camera.main.transform.forward, camToTrans) / Vector3.Dot(Camera.main.transform.forward, cameraToCursor));
-        }
-    }
-
-    private void ReleaseDisk(InputAction.CallbackContext ctx)
-    {
-        if (diskSelected == null) return;
-
-        if (TimelineManager.instance.currentTarget != null)
-        {
-            TimelineManager.instance.PlaceDiskOnTimeline(diskSelected.GetComponent<SnapshotDisc>());
-
-            HideDisk(diskSelected);
+            HideDisk(currentDisk);
 
             AudioManager.Instance.PlaySoundByName("PlaceTimeline");
         }
         else
         {
-            diskSelected.TryGetComponent<Collider>(out var col);
-            col.enabled = true;
-            diskSelected.TryGetComponent<Rigidbody>(out var rb);
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-            }
-            Vector3 pos = diskSelected.transform.localPosition;
-            pos.y = heightDiskPlaced;
-            diskSelected.transform.localPosition = pos;
-
             AudioManager.Instance.PlaySoundByName("PlaceDisk");
         }
 
-        diskSelected = null;
-        pressed = false;
+        currentDisk = null;
+        disk.element.pickingMode = PickingMode.Position;
     }
 
-    public void ShowDisk(SnapshotDisc disc, bool select=true)
+    private void OnDisable()
     {
-        disc.gameObject.SetActive(true);
+        if (physicsCoroutine != null)
+            StopCoroutine(physicsCoroutine);
+    }
+
+    public void ShowDisk(Disk disc, bool select=true)
+    {
+        disc.element.style.display = DisplayStyle.Flex;
+        disks.Add(disc);
+
         if (select)
         {
-            var col = disc.GetComponent<Collider>();
-            SelectDisk(disc.gameObject, col);
+            var evt = PointerDownEvent.GetPooled();
+            disc.isDragging = true;
+            disc.dragOffset = evt.localPosition;
+            disc.velocity = Vector2.zero;
+            disc.element.CapturePointer(evt.pointerId);
+            currentDisk = disc;
+            AudioManager.Instance.PlaySoundByName("TakeDisk");
         }
     }
 
-    private void HideDisk(GameObject disc)
+    private void HideDisk(Disk disc)
     {
-        var col = disc.GetComponent<Collider>();
-        col.enabled = true;
-        disc.SetActive(false);
+        disc.element.style.display = DisplayStyle.None;
+        disks.Remove(disc);
     }
 
     private void InitButtons()
@@ -166,21 +187,38 @@ public class DisksManager : MonoBehaviour
 
     private void CreateDisk()
     {
-        SnapshotDisc disk = Instantiate(templateDisc, disksParent);
-        disk.Reset();
+        var disk = new Disk();
+        disk.data = SnapshotDisc.DiscData.CreateDefault();
+        disk.element = templateCardElement.Instantiate();
+        disk.element.Q<VisualElement>("insideCard").style.unityBackgroundImageTintColor = Random.ColorHSV(0, 1, .9f, 1, .6f, 1);
+        disk.element.style.left = 1708;
+        disk.element.style.top = 723;
+
+        root.Add(disk.element);
+
+        disk.element.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(evt, disk));
+        disk.element.RegisterCallback<PointerMoveEvent>(evt => OnPointerMove(evt, disk));
+        disk.element.RegisterCallback<PointerUpEvent>(evt => OnPointerUp(evt, disk));
+
+        disks.Add(disk);
+
         OnCreateDisk?.Invoke(disk);
         AudioManager.Instance.PlaySoundByName("CreateDisk");
     }
 
-    public void PlayDisk(SnapshotDisc currentDisc)
+    public void PlayDisk(Disk currentDisc)
     {
         OnPlayDisk?.Invoke(currentDisc);
     }
 
     public SnapshotDisc.DiscData GetSceneParameters()
     {
-        SnapshotDisc.DiscData data = (OnGetSceneParameters?.Invoke()).GetValueOrDefault();
-        return data;
+        Disk data = new();
+
+        data.AddDataToDisk(LightManager.instance.GetLightsFromScene());
+        data.AddDataToDisk(DecorsManager.instance.GetDecorFromScene());
+
+        return data.data;
     }
 
 }

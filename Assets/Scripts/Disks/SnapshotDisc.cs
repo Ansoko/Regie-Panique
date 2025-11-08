@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class SnapshotDisc : MonoBehaviour
+public class SnapshotDisc
 {
     public struct DiscData
     {
@@ -41,66 +39,14 @@ public class SnapshotDisc : MonoBehaviour
             };
             return data;
         }
+
+        public override readonly string ToString()
+        {
+            return $"Spot: [HasSpot: {hasSpot}, Color: {spotColor}, Size: {spotSize}, Placement: {spotPlacement}, Mouvement: {spotMouvement}] " +
+                   $"Ambiance: [Color: {ambColor}, Intensity: {ambIntensity}] " +
+                   $"Decors: [L1: {decorsL1}, L2: {decorsL2}, L3: {decorsL3}] " +
+                   $"Sound: [Type: {soundType}] " +
+                   $"Curtain: [Opening: {curtainOpening}]";
+        }
     }
-
-    public float time = 1;
-    [SerializeField] private SpriteRenderer diskRenderer;
-    public DiscData data;
-
-    private void Start()
-    {
-        RandomColor();
-    }
-
-    public void Reset()
-    {
-        time = 1f;
-        data.hasSpot = null;
-        data.spotColor = -1;
-        data.spotSize = -1;
-        data.spotPlacement = -1;
-        data.spotMouvement = -1;
-        data.ambColor = -1;
-        data.ambIntensity = -1;
-        data.decorsL1 = null;
-        data.decorsL2 = null;
-        data.decorsL3 = null;
-        data.soundType = null;
-        data.curtainOpening = -1;
-    }
-
-    private void RandomColor()
-    {
-        if(diskRenderer == null) return;
-        diskRenderer.color = Random.ColorHSV(0, 1, .9f, 1, .6f, 1);
-    }
-
-    public void AddDataToDisk(DiscData newData)
-    {
-        if (newData.hasSpot != null)
-            data.hasSpot = newData.hasSpot;
-        if (newData.spotColor != -1)
-            data.spotColor = newData.spotColor;
-        if (newData.spotSize != -1)
-            data.spotSize = newData.spotSize;
-        if (newData.spotPlacement != -1)
-            data.spotPlacement = newData.spotPlacement;
-        if (newData.spotMouvement != -1)
-            data.spotMouvement = newData.spotMouvement;
-        if (newData.ambColor != -1)
-            data.ambColor = newData.ambColor;
-        if (newData.ambIntensity != -1)
-            data.ambIntensity = newData.ambIntensity;
-        if (newData.decorsL1 != null)
-            data.decorsL1 = newData.decorsL1;
-        if (newData.decorsL2 != null)
-            data.decorsL2 = newData.decorsL2;
-        if (newData.decorsL3 != null)
-            data.decorsL3 = newData.decorsL3;
-        if (newData.soundType != null)
-            data.soundType = newData.soundType;
-        if (newData.curtainOpening != -1)
-            data.curtainOpening = newData.curtainOpening;
-    }
-
 }

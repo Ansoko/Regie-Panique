@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static DisksManager;
 
 public class TimelineManager : MonoBehaviour
 {
@@ -13,14 +13,14 @@ public class TimelineManager : MonoBehaviour
     private ScrollView timelineHolder;
     private float totalDuration = 0;
     private float widthTimeline = 0;
-    public VisualElement currentTarget;
     private VisualElement currentplayingElement;
     private int currentPlayingKey = 0;
     private float elipsedTime = 0f;
     private float widthPerSecond = 200f;
 
-    private Dictionary<VisualElement, SnapshotDisc> timelineCases = new();
-    private SnapshotDisc currentPlayingDisc = null;
+    private Dictionary<VisualElement, Disk> timelineCases = new();
+    private Disk currentPlayingDisc = null;
+    private bool isStarted = false;
 
     public static TimelineManager instance;
     private void Awake()
@@ -49,7 +49,6 @@ public class TimelineManager : MonoBehaviour
         }
 
         UIManager.instance.OnInitButtons += InitUI;
-        InputSystem.actions.FindAction("Click").started += ClickOverCase;
     }
 
     private void InitUI()
@@ -66,60 +65,71 @@ public class TimelineManager : MonoBehaviour
             Label timecodeLabel = timelineInstance.Q<Label>("timecode");
 
             rootElement.style.width = durationTimestamp[i] * widthPerSecond;
-            rootElement.RegisterCallback<MouseEnterEvent>(HoverCase);
-            rootElement.RegisterCallback<MouseLeaveEvent>(UnhoverCase);
+            timelineInstance.RegisterCallback<PointerDownEvent>(OnPointerDown);
 
             TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(i+1);
-            tiradeTimelineLabel.text = dialogue.dialogue=="null" ? "Action" : $"{dialogue.character}<br>{dialogue.dialogue}";
+            tiradeTimelineLabel.text = dialogue.dialogue=="null" ? 
+                dialogue.character == "Rideau" ? "Fin d'acte" : "Début d'acte" 
+                : $"{dialogue.character}<br>{dialogue.dialogue}";
             timecodeLabel.text = $"{dialogue.key}";
 
             timelineHolder.contentContainer.Add(timelineInstance);
             timelineCases.Add(timelineInstance, null);
         }
-
-        StartCoroutine(PlayTimeline()); //temp
     }
 
-    private void HoverCase(MouseEnterEvent evt)
+    private void OnPointerDown(PointerDownEvent evt)
     {
-        currentTarget = evt.currentTarget as VisualElement;
-        currentTarget.style.backgroundColor = Color.red;
-    }
+        VisualElement timeCase = (VisualElement) evt.currentTarget;
+        if(timeCase == null) return;
 
-    private void UnhoverCase(MouseLeaveEvent evt)
-    {
-        VisualElement target = evt.currentTarget as VisualElement;
-            target.style.backgroundColor = Color.white;
-        if(currentTarget == target)
-            currentTarget = null;
-    }
-
-    protected virtual void ClickOverCase(InputAction.CallbackContext ctx)
-    {
-        if (currentTarget == null) return;
-        if (timelineCases[currentTarget.parent] == null) return;
+        if (timelineCases[timeCase] == null) return;
         
-        DisksManager.instance.ShowDisk(timelineCases[currentTarget.parent]);
-        timelineCases[currentTarget.parent] = null;
-        currentTarget.style.backgroundColor = Color.white;
+        DisksManager.instance.ShowDisk(timelineCases[timeCase]);
+        timelineCases[timeCase] = null;
         return;
-        
     }
 
-    public void PlaceDiskOnTimeline(SnapshotDisc snapshotDisc)
+    public bool PlaceDiskOnTimeline(Disk snapshotDisc, Vector2 pointerPosition)
     {
-        if (timelineCases[currentTarget.parent]!=null)
+        VisualElement timeCase = IsOver(pointerPosition);
+        if (timeCase == null) return false;
+
+        if (timelineCases[timeCase] != null)
         {
-            DisksManager.instance.ShowDisk(timelineCases[currentTarget.parent], false);
+            //DisksManager.instance.ShowDisk(timelineCases[timeCase], false); //on n'expulse plus l'ancienne disquette
+            snapshotDisc.AddDataToDisk(timelineCases[timeCase].data);
         }
-        timelineCases[currentTarget.parent] = snapshotDisc;
-        if (currentTarget != null)
-            currentTarget.style.backgroundColor = Color.green;
+        timelineCases[timeCase] = snapshotDisc;
+        if (!isStarted)
+        {
+            isStarted = true;
+            StartCoroutine(PlayTimeline());
+        }
+        return true;
+    }
+
+    public VisualElement IsOver(Vector2 pointerPosition)
+    {
+        bool firstElementFound = false;
+        foreach (var rect in timelineCases.Keys)
+        {
+            if (GetFirstVisibleElement() != rect && !firstElementFound)
+                continue;
+
+            firstElementFound = true;
+            if (rect.worldBound.Contains(pointerPosition))
+            {
+                return rect;
+            }
+        }
+        return null;
     }
 
     private int nbrDiscPlayed = 0;
     private IEnumerator PlayTimeline()
     {
+        StartCoroutine(ActorManager.instance.StartThePlay());
         elipsedTime = 0f;
         while (elipsedTime < totalDuration)
         {
@@ -128,7 +138,7 @@ public class TimelineManager : MonoBehaviour
             VisualElement firstVisible = GetFirstVisibleElement();
             if(currentplayingElement != firstVisible) //début d'une nouvelle case
             {
-                CheckScoring(currentPlayingKey, nbrDiscPlayed);
+                CheckScoring(currentPlayingKey, currentPlayingDisc);
 
                 currentPlayingKey++;
                 currentplayingElement = firstVisible;
@@ -160,7 +170,6 @@ public class TimelineManager : MonoBehaviour
             float childLeft = child.layout.x;
             float childRight = child.layout.x + child.layout.width;
 
-            // Si une partie de l'élément est visible dans la zone de scroll
             if (childRight > scrollX && childLeft < scrollX + viewWidth)
             {
                 return child;
@@ -170,26 +179,35 @@ public class TimelineManager : MonoBehaviour
         return null;
     }
 
-    private void CheckScoring(int key, int nbrDiscPlayed)
+    private void CheckScoring(int key, Disk playingDisk)
     {
         if(key < 1) return;
 
         //TODO: check scoring for the disc that just ended
         TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(key);
         SnapshotDisc.DiscData scene = DisksManager.instance.GetSceneParameters();
+        playingDisk ??= new Disk() { data = SnapshotDisc.DiscData.CreateDefault() };
 
         int nbrErrors = 0;
 
-        //rideau
-        if (dialogue.rideau == "Fermé" && scene.curtainOpening == 1)
+        Debug.Log($"Vérification du key {key}...");
+        if(dialogue.rideau == "Fermé" && scene.curtainOpening == 0)
         {
+            Debug.Log(" - rideau fermé, pas d'autres vérifications");
+            return; //rideau fermé, pas d'autres vérifications
+        }
+        else if (dialogue.rideau == "Fermé" && scene.curtainOpening == 1)
+        {
+            //rideau
             nbrErrors += 13; //all error !!!!!
+            Debug.Log(" - rideau devrait être fermé mais scène ouverte");
         }
         else
         {
             if(dialogue.rideau == "Ouvert" && scene.curtainOpening == 0)
             {
                 nbrErrors++;
+                Debug.Log(" - rideau devrait être ouvert mais scène fermée");
             }
 
             //spot
@@ -198,65 +216,78 @@ public class TimelineManager : MonoBehaviour
                 if (dialogue.onOffSpot != scene.hasSpot)
                 {
                     nbrErrors += 5;
+                    Debug.Log(" - spot devrait être allumé mais éteint");
                 }
                 else
                 {
                     if (LightManager.instance.spotColorDict[dialogue.couleurSpot] != scene.spotColor)
                     {
                         nbrErrors++;
+                        Debug.Log(" - mauvaise couleur de spot ("+ LightManager.instance.spotColorDict[dialogue.couleurSpot]+" attendu, mais current: "+ scene.spotColor+")");
                     }
                     if (dialogue.diametreSpot == "Petit" && scene.spotSize == 1
                         || dialogue.diametreSpot == "Grand" && scene.spotSize == 0)
                     {
                         nbrErrors++;
+                        Debug.Log(" - mauvais diamètre de spot");
                     }
                     if (dialogue.placementGrille9 != scene.spotPlacement)
                     {
                         nbrErrors++;
+                        Debug.Log(" - mauvais placement de spot");
                     }
-                    if (dialogue.mouvement == "Fixe" && !(scene.spotMouvement == -1)
-                        || dialogue.mouvement == "G 2" && scene.spotMouvement == 0
-                        || dialogue.mouvement == "G 1" && scene.spotMouvement == 1
-                        || dialogue.mouvement == "D 1" && scene.spotMouvement == 2
-                        || dialogue.mouvement == "D 2" && scene.spotMouvement == 3)
+                    if (dialogue.mouvement == "Fixe" && !(playingDisk.data.spotMouvement == -1)
+                        || dialogue.mouvement == "G 2" && playingDisk.data.spotMouvement == 0
+                        || dialogue.mouvement == "G 1" && playingDisk.data.spotMouvement == 1
+                        || dialogue.mouvement == "D 1" && playingDisk.data.spotMouvement == 2
+                        || dialogue.mouvement == "D 2" && playingDisk.data.spotMouvement == 3)
                     {
                         nbrErrors++;
+                        Debug.Log(" - mauvais mouvement de spot");
                     }
                 }
             }
             else if (dialogue.onOffSpot != scene.hasSpot)
             {
                 nbrErrors++;
+                Debug.Log(" - spot devrait être éteint mais allumé");
             }
 
             //ambiance
             if (dialogue.intensiteAmb > 0 && dialogue.intensiteAmb != scene.ambIntensity)
             {
                 nbrErrors++;
+                Debug.Log(" - mauvaise intensité ambiante, attendu: "+dialogue.intensiteAmb+", scène: "+scene.ambIntensity);
             }
             if (dialogue.couleurAmb != "null" && LightManager.instance.ambColorDict[dialogue.couleurAmb] != scene.ambColor)
             {
                 nbrErrors++;
+                Debug.Log(" - mauvaise couleur ambiante, attendu: "+ LightManager.instance.ambColorDict[dialogue.couleurAmb] + ", scène: "+scene.ambColor);
             }
 
             //decors
             if (dialogue.decorL1 != scene.decorsL1)
             {
                 nbrErrors++;
+                Debug.Log(" - mauvais décor L1, attendu: "+dialogue.decorL1+", posé: "+scene.decorsL1);
             }
             if (dialogue.decorL2 != scene.decorsL2)
             {
                 nbrErrors++;
+                Debug.Log(" - mauvais décor L2, attendu: "+dialogue.decorL2+", posé: "+scene.decorsL2);
             }
             if (dialogue.decorL3 != scene.decorsL3)
             {
                 nbrErrors++;
+                Debug.Log(" - mauvais décor L3, attendu: "+dialogue.decorL3+", posé: "+scene.decorsL3);
             }
 
             //sound
-            if (dialogue.sons != scene.soundType)
+            if (!dialogue.sons.Contains("Dev") && !(dialogue.sons == "null" && playingDisk.data.soundType == "Pas de bruitage")
+                && dialogue.sons != playingDisk.data.soundType)
             {
                 nbrErrors++;
+                Debug.Log(" - mauvais son, attendu: "+dialogue.sons+", joué:"+playingDisk.data.soundType);
             }
         }
 
@@ -270,14 +301,17 @@ public class TimelineManager : MonoBehaviour
         if(nbrErrors == 0)
         {
             AudioManager.Instance.PlaySoundByName("Great");
+            UIManager.instance.PlayGood();
         }
         else if(nbrErrors <= 3)
         {
             AudioManager.Instance.PlaySoundByName("Good");
+            UIManager.instance.PlayOk();
         }
         else
         {
             AudioManager.Instance.PlaySoundByName("Bad");
+            UIManager.instance.PlayMeh();
         }
     }
 }

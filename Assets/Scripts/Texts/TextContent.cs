@@ -51,6 +51,11 @@ public class TextContent : MonoBehaviour
             this.sons = sons;
             this.rideau = rideau;
         }
+
+        public override string ToString()
+        {
+            return $"Key: {key}, NoteDirector: {noteDirector}, DecorL3: {decorL3}, DecorL2: {decorL2}, DecorL1: {decorL1}, IntensiteAmb: {intensiteAmb}, CouleurAmb: {couleurAmb}, OnOffSpot: {onOffSpot}, CouleurSpot: {couleurSpot}, DiametreSpot: {diametreSpot}, PlacementGrille9: {placementGrille9}, Mouvement: {mouvement}, Sons: {sons}, Rideau: {rideau}";
+        }
     }
 
     //private Dictionary<string, string> dictionnaire = new();

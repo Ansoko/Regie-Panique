@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="background-image: url(&quot;project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=-1197867910&amp;guid=1d142e38f7c00f343959d4dc9275ab42&amp;type=3#Console_Spritesheet_38&quot;); height: 160px; width: 128px; position: absolute;">
+        <ui:VisualElement name="insideCard" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Sprites/UI/Console_Spritesheet.png?fileID=-1627426775&amp;guid=1d142e38f7c00f343959d4dc9275ab42&amp;type=3#Console_Spritesheet_39&quot;);">
+            <ui:VisualElement style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
