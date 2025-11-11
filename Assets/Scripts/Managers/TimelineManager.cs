@@ -19,7 +19,6 @@ public class TimelineManager : MonoBehaviour
     private float widthPerSecond = 200f;
 
     private Dictionary<VisualElement, Disk> timelineCases = new();
-    private Disk currentPlayingDisc = null;
     private bool isStarted = false;
 
     public static TimelineManager instance;
@@ -49,6 +48,7 @@ public class TimelineManager : MonoBehaviour
         }
 
         UIManager.instance.OnInitButtons += InitUI;
+        DisksManager.instance.OnPlayDisk += PlayDisc;
     }
 
     private void InitUI()
@@ -92,15 +92,24 @@ public class TimelineManager : MonoBehaviour
 
     public bool PlaceDiskOnTimeline(Disk snapshotDisc, Vector2 pointerPosition)
     {
-        VisualElement timeCase = IsOver(pointerPosition);
-        if (timeCase == null) return false;
+        VisualElement hoveringElement = IsOver(pointerPosition);
+        if (hoveringElement == null) return false;
 
-        if (timelineCases[timeCase] != null)
+        if (timelineCases[hoveringElement] != null)
         {
             //DisksManager.instance.ShowDisk(timelineCases[timeCase], false); //on n'expulse plus l'ancienne disquette
-            snapshotDisc.AddDataToDisk(timelineCases[timeCase].data);
+            timelineCases[hoveringElement].AddDataToDisk(snapshotDisc.data);
         }
-        timelineCases[timeCase] = snapshotDisc;
+        else
+        {
+            timelineCases[hoveringElement] = snapshotDisc;
+        }
+
+        if (currentplayingElement == hoveringElement)
+        {
+            DisksManager.instance.PlayDisk(timelineCases[hoveringElement]);
+        }
+
         if (!isStarted)
         {
             isStarted = true;
@@ -127,6 +136,8 @@ public class TimelineManager : MonoBehaviour
     }
 
     private int nbrDiscPlayed = 0;
+
+
     private IEnumerator PlayTimeline()
     {
         StartCoroutine(ActorManager.instance.StartThePlay());
@@ -138,26 +149,23 @@ public class TimelineManager : MonoBehaviour
             VisualElement firstVisible = GetFirstVisibleElement();
             if(currentplayingElement != firstVisible) //début d'une nouvelle case
             {
-                CheckScoring(currentPlayingKey, currentPlayingDisc);
+                CheckScoring(currentPlayingKey, currentplayingElement);
 
                 currentPlayingKey++;
                 currentplayingElement = firstVisible;
                 nbrDiscPlayed = 0;
-            }
 
-            if (firstVisible != null && currentPlayingDisc != timelineCases[firstVisible]) //changment de disk
-            {
-                currentPlayingDisc = timelineCases[firstVisible];
-                if (currentPlayingDisc != null)
-                {
-                    nbrDiscPlayed++;
-                    DisksManager.instance.PlayDisk(currentPlayingDisc);
-                }
+                DisksManager.instance.PlayDisk(timelineCases[currentplayingElement]??null);
             }
 
             elipsedTime += Time.deltaTime * speed;
             yield return null;
         }
+    }
+
+    private void PlayDisc(Disk _)
+    {
+        nbrDiscPlayed++;
     }
 
     private VisualElement GetFirstVisibleElement()
@@ -179,11 +187,13 @@ public class TimelineManager : MonoBehaviour
         return null;
     }
 
-    private void CheckScoring(int key, Disk playingDisk)
+    private void CheckScoring(int key, VisualElement timeElementToCheck)
     {
         if(key < 1) return;
+        if(timelineCases.ContainsKey(timeElementToCheck) == false) return;
 
-        //TODO: check scoring for the disc that just ended
+        Disk playingDisk = timelineCases[timeElementToCheck];
+
         TextContent.Dialogue dialogue = TextContent.instance.FindKeyframe(key);
         SnapshotDisc.DiscData scene = DisksManager.instance.GetSceneParameters();
         playingDisk ??= new Disk() { data = SnapshotDisc.DiscData.CreateDefault() };
@@ -194,22 +204,16 @@ public class TimelineManager : MonoBehaviour
         if(dialogue.rideau == "Fermé" && scene.curtainOpening == 0)
         {
             Debug.Log(" - rideau fermé, pas d'autres vérifications");
-            return; //rideau fermé, pas d'autres vérifications
         }
-        else if (dialogue.rideau == "Fermé" && scene.curtainOpening == 1)
+        else if ((dialogue.rideau == "Fermé" && scene.curtainOpening == 1)
+            || (dialogue.rideau == "Ouvert" && scene.curtainOpening == 0))
         {
             //rideau
-            nbrErrors += 13; //all error !!!!!
-            Debug.Log(" - rideau devrait être fermé mais scène ouverte");
+            nbrErrors += 12; //all error !!!!!
+            Debug.Log(" - rideau devrait être fermé mais scène ouverte ou inversement");
         }
         else
         {
-            if(dialogue.rideau == "Ouvert" && scene.curtainOpening == 0)
-            {
-                nbrErrors++;
-                Debug.Log(" - rideau devrait être ouvert mais scène fermée");
-            }
-
             //spot
             if (dialogue.onOffSpot == "Allumé")
             {
@@ -229,12 +233,12 @@ public class TimelineManager : MonoBehaviour
                         || dialogue.diametreSpot == "Grand" && scene.spotSize == 0)
                     {
                         nbrErrors++;
-                        Debug.Log(" - mauvais diamètre de spot");
+                        Debug.Log(" - mauvais diamètre de spot, attendu: "+ dialogue.diametreSpot +", joué:" +scene.spotSize);
                     }
-                    if (dialogue.placementGrille9 != scene.spotPlacement)
+                    if (dialogue.placementGrille9 != (scene.spotPlacement+1))
                     {
                         nbrErrors++;
-                        Debug.Log(" - mauvais placement de spot");
+                        Debug.Log(" - mauvais placement de spot, attendu: "+ dialogue.placementGrille9+ ", joué: "+ scene.spotPlacement);
                     }
                     if (dialogue.mouvement == "Fixe" && !(playingDisk.data.spotMouvement == -1)
                         || dialogue.mouvement == "G 2" && playingDisk.data.spotMouvement == 0
@@ -281,14 +285,15 @@ public class TimelineManager : MonoBehaviour
                 nbrErrors++;
                 Debug.Log(" - mauvais décor L3, attendu: "+dialogue.decorL3+", posé: "+scene.decorsL3);
             }
+        }
 
-            //sound
-            if (!dialogue.sons.Contains("Dev") && !(dialogue.sons == "null" && playingDisk.data.soundType == "Pas de bruitage")
-                && dialogue.sons != playingDisk.data.soundType)
-            {
-                nbrErrors++;
-                Debug.Log(" - mauvais son, attendu: "+dialogue.sons+", joué:"+playingDisk.data.soundType);
-            }
+        //sound
+        if (!dialogue.sons.Contains("Dev")
+            && !(dialogue.sons == "null" && playingDisk.data.soundType == "Pas de bruitage")
+            && dialogue.sons != playingDisk.data.soundType)
+        {
+            nbrErrors++;
+            Debug.Log(" - mauvais son, attendu: "+dialogue.sons+", joué:"+playingDisk.data.soundType);
         }
 
         if(nbrDiscPlayed > 1)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +9,6 @@ public class LightManager : MonoBehaviour
     [SerializeField] private Light spot;
     [SerializeField] private Light ambiance;
     [SerializeField] private List<Transform> positions;
-    // 7 - 8 - 9
-    // 4 - 5 - 6
-    // 1 - 2 - 3
 
     [SerializeField] private List<Color> spotColors;
     [SerializeField] private List<Color> ambiantColors;
@@ -139,7 +135,28 @@ public class LightManager : MonoBehaviour
         var selected = positionIndex.GetActiveOptions(stackalloc int[positionIndex.length]);
         if (selected.Length <= 0)
             return -1;
-        return selected[0];
+
+        //disposition selected :
+        //2-1-0
+        //5-4-3
+        //8-7-6
+
+        //We want :
+        // 6-7-8
+        // 3-4-5
+        // 0-1-2 (ou depuis 1 jsplus ????)
+        return selected[0] switch
+        {
+            0 => 8,
+            1 => 7,
+            2 => 6,
+            3 => 5,
+            5 => 3,
+            6 => 2,
+            7 => 1,
+            8 => 0,
+            _ => selected[0],
+        };
     }
 
     private int GetDirectionSpot(ToggleButtonGroupState positionIndex)

@@ -480,7 +480,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tu penses vraiment que t'as le temps de changer les options ? \nOn t'attends
+  m_text: "Tu penses vraiment que t'as le temps de changer les options ? \nOn t'attend
     !"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8eb612bb1c07be048aa52eeb2b62b30c, type: 2}
